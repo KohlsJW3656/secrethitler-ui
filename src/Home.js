@@ -7,7 +7,7 @@ import { getAllPolicies, startEditingPolicy } from "./actions";
 export function Home() {
   const dispatch = useDispatch();
   const allPolicies = useSelector((state) => state.allPolicies);
-  const [playerCount, setPlayerCount] = useState(10);
+  const [playerCount, setPlayerCount] = useState(6);
   const policyDeck = allPolicies.filter(
     (policy) => policy.isDiscarded === 0 && policy.isEnacted === 0
   );
@@ -76,11 +76,11 @@ export function Home() {
       <span className="button" onClick={() => shuffleDeck()}>
         Shuffle Deck
       </span>
-      <span className="button" onClick={() => enactTop()}>
-        Enact Top Policy
-      </span>
-      <span id="reset" className="button" onClick={() => resetGame()}>
+      <span className="button important" onClick={() => resetGame()}>
         Reset Game
+      </span>
+      <span className="button important" onClick={() => enactTop()}>
+        Enact Top Policy
       </span>
       <p>Deck: {policyDeck.length}</p>
       <p>Discarded: {discarded.length}</p>
