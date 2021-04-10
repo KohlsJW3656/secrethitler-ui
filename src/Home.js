@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Board } from "./Board";
-import { Policy } from "./Policy";
 import { getAllPolicies, startEditingPolicy } from "./actions";
 
 export function Home() {
@@ -80,7 +79,7 @@ export function Home() {
       <span className="button" onClick={() => enactTop()}>
         Enact Top Policy
       </span>
-      <span className="button" onClick={() => resetGame()}>
+      <span id="reset" className="button" onClick={() => resetGame()}>
         Reset Game
       </span>
       <p>Deck: {policyDeck.length}</p>

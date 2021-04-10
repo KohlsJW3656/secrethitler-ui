@@ -54,3 +54,7 @@
   width: 700px;
   margin: 20px;
 }
+
+#reset {
+  float: right;
+}
