@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Policy } from "./Policy";
-import { getAllPolicies, startEditingPolicy } from "./actions";
+import { startEditingPolicy } from "./actions";
 
 export function Officials() {
   const dispatch = useDispatch();
@@ -16,8 +16,10 @@ export function Officials() {
   );
 
   useEffect(() => {
-    dispatch(getAllPolicies());
-  }, []);
+    setCurrentPoliciesPolicies(
+      policyDeck.filter((currentPolicy) => currentPolicy.deckOrder < 3)
+    );
+  }, [dispatch, allPolicies.length, currentPolicies.length]);
 
   const setDiscarded = (policy) => {
     setCurrentPoliciesPolicies((currentPolicies) =>
