@@ -3,7 +3,7 @@ export const Action = Object.freeze({
   FinishEditingPolicy: "FinishEditingPolicy",
 });
 
-const host = "https://axisandallies-server.duckdns.org:8442";
+const host = "https://secrethitleronline-server.duckdns.org:8445";
 
 function checkForErrors(response) {
   if (!response.ok) {
