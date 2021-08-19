@@ -29,6 +29,17 @@ export function Home() {
   }, []);
 
   useEffect(() => {
+    if (socket == null) return;
+    socket.on("receive-changes", () => {
+      dispatch(getAllPolicies());
+    });
+    socket.emit("get-policies");
+    return () => {
+      socket.off("receive-changes");
+    };
+  }, [socket, policyDeck.length]);
+
+  useEffect(() => {
     dispatch(getAllPolicies());
   }, []);
 
