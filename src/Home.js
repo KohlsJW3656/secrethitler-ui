@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Board } from "./Board";
 import { getAllPolicies, startEditingPolicy } from "./actions";
+import { io } from "socket.io-client";
 
 export function Home() {
   const dispatch = useDispatch();
+  const [socket, setSocket] = useState();
   const allPolicies = useSelector((state) => state.allPolicies);
   const [playerCount, setPlayerCount] = useState(6);
   const policyDeck = allPolicies.filter(
@@ -16,6 +18,15 @@ export function Home() {
   );
   const notEnacted = allPolicies.filter((policy) => policy.isEnacted === 0);
   const enacted = allPolicies.filter((policy) => policy.isEnacted === 1);
+
+  useEffect(() => {
+    const s = io("https://secrethitleronline-server.duckdns.org:8445");
+    setSocket(s);
+
+    return () => {
+      s.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     dispatch(getAllPolicies());
