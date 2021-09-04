@@ -3,13 +3,11 @@ import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Board } from "./Board";
 import { getAllPolicies, startEditingPolicy } from "./actions";
-import { io } from "socket.io-client";
 
 export function Home() {
   const dispatch = useDispatch();
-  const [socket, setSocket] = useState();
   const allPolicies = useSelector((state) => state.allPolicies);
-  const [playerCount, setPlayerCount] = useState(6);
+  const [playerCount, setPlayerCount] = useState(10);
   const policyDeck = allPolicies.filter(
     (policy) => policy.isDiscarded === 0 && policy.isEnacted === 0
   );
@@ -18,26 +16,6 @@ export function Home() {
   );
   const notEnacted = allPolicies.filter((policy) => policy.isEnacted === 0);
   const enacted = allPolicies.filter((policy) => policy.isEnacted === 1);
-
-  useEffect(() => {
-    const s = io("https://secrethitleronline-server.duckdns.org:8445");
-    setSocket(s);
-
-    return () => {
-      s.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (socket == null) return;
-    socket.on("receive-changes", () => {
-      dispatch(getAllPolicies());
-    });
-    socket.emit("get-policies");
-    return () => {
-      socket.off("receive-changes");
-    };
-  }, [socket, policyDeck.length]);
 
   useEffect(() => {
     dispatch(getAllPolicies());
