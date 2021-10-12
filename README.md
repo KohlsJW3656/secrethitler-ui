@@ -10,9 +10,12 @@ Note: Assets are not mine
 For now, the policy cards are the only thing implemented. 
 
 Order of play:
+
 When it's the presidents turn, click draw policies and select a policy to discard. Once they are done, the chancellor will click draw policies and select the policy to enact.
 Shuffle Deck shuffle the discarded cards back in.
+
 If the government vote fails 3 times in a row, pressing Enact Top Policy will automatically enact the top policy card. To make the game spicy and more fun, if the policy was fascist, the last enacted president gets to play that policy (i.e., vote fails 3 times, the last president with a passing vote gets to kill, investigate, or select the next president)
+
 When there are 5 fascist policies enacted, veto powers are unlocked. If the chancellor wishes to veto, and the president agrees, the chancellor can select the veto button to discard all cards. If the president doesn't agree, the chancellor must select a policy to enact.
 When a team has won, press Reset Game to reset the game.
 
