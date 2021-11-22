@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Board } from "./Board";
-import { getAllPolicies, startEditingPolicy } from "./actions";
+import { Board } from "../Board";
+import { getAllPolicies, startEditingPolicy } from "../actions";
 
-export function Home() {
+export function DashboardComponent() {
   const dispatch = useDispatch();
   const allPolicies = useSelector((state) => state.allPolicies);
   const [playerCount, setPlayerCount] = useState(10);

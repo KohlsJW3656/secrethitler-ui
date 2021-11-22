@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Policy } from "./Policy";
-import { startEditingPolicy } from "./actions";
+import { Policy } from "../Policy";
+import { startEditingPolicy } from "../actions";
 
 export function Officials() {
   const dispatch = useDispatch();
