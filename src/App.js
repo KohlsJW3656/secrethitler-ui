@@ -36,17 +36,6 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    if (socket == null) return;
-    socket.on("receive-changes", () => {
-      dispatch(getAllPolicies());
-    });
-    socket.emit("get-policies");
-    return () => {
-      socket.off("receive-changes");
-    };
-  }, [socket, policyDeck.length]);
-
   return (
     <Router history={history}>
       <div className="App">

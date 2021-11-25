@@ -2,35 +2,54 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Board } from "./Board";
-import { getAllPolicies, startEditingPolicy } from "../actions";
+import {
+  startGettingAllPolicies,
+  startGettingDrawPolicies,
+  startGettingDeckPolicies,
+  startGettingDiscardedPolicies,
+  startGettingEnactedPolicies,
+  startGettingNotEnactedPolicies,
+  startGettingTopPolicy,
+  startEditingPolicy,
+} from "../actions";
 import { withRouter } from "react-router-dom";
 
 import "../styles/dashboard.css";
 
 function DashboardComponent() {
   const dispatch = useDispatch();
+  const jwt = useSelector((state) => state.jwt);
   const allPolicies = useSelector((state) => state.allPolicies);
+  const drawPolicies = useSelector((state) => state.drawPolicies);
+  const deckPolicies = useSelector((state) => state.deckPolicies);
+  const discardedPolicies = useSelector((state) => state.discardedPolicies);
+  const enactedPolicies = useSelector((state) => state.enactedPolicies);
+  const notEnactedPolicies = useSelector((state) => state.notEnactedPolicies);
+  const topPolicy = useSelector((state) => state.topPolicy);
+
   const [playerCount, setPlayerCount] = useState(10);
-  const policyDeck = allPolicies.filter(
-    (policy) => policy.isDiscarded === 0 && policy.isEnacted === 0
-  );
-  const discarded = allPolicies.filter(
-    (policy) => policy.isDiscarded === 1 && policy.isEnacted === 0
-  );
-  const notEnacted = allPolicies.filter((policy) => policy.isEnacted === 0);
-  const enacted = allPolicies.filter((policy) => policy.isEnacted === 1);
 
   useEffect(() => {
-    dispatch(getAllPolicies());
-  }, []);
+    fetchAll();
+  }, [dispatch, jwt]);
+
+  const fetchAll = () => {
+    dispatch(startGettingAllPolicies(jwt));
+    dispatch(startGettingDrawPolicies(jwt));
+    dispatch(startGettingDeckPolicies(jwt));
+    dispatch(startGettingDiscardedPolicies(jwt));
+    dispatch(startGettingEnactedPolicies(jwt));
+    dispatch(startGettingNotEnactedPolicies(jwt));
+    dispatch(startGettingTopPolicy(jwt));
+  };
 
   const enactTop = () => {
-    let topPolicy = policyDeck[0];
     topPolicy.isEnacted = 1;
-    dispatch(startEditingPolicy(topPolicy));
+    dispatch(startEditingPolicy(topPolicy, jwt));
     resetDeckOrder(
-      policyDeck.filter((policy) => policy.policy_id !== topPolicy.policy_id)
+      deckPolicies.filter((policy) => policy.policy_id !== topPolicy.policy_id)
     );
+    fetchAll();
   };
 
   const randomizeDeck = (array) => {
@@ -50,26 +69,28 @@ function DashboardComponent() {
   };
 
   const shuffleDeck = () => {
-    for (let i = 0; i < notEnacted.length; i++) {
-      notEnacted[i].isDiscarded = 0;
-      dispatch(startEditingPolicy(notEnacted[i]));
+    for (let i = 0; i < notEnactedPolicies.length; i++) {
+      notEnactedPolicies[i].isDiscarded = 0;
+      dispatch(startEditingPolicy(notEnactedPolicies[i], jwt));
     }
-    setTimeout(() => randomizeDeck(notEnacted), 500);
+    setTimeout(() => randomizeDeck(notEnactedPolicies), 500);
+    fetchAll();
   };
 
   const resetGame = () => {
     for (let i = 0; i < allPolicies.length; i++) {
       allPolicies[i].isDiscarded = 0;
       allPolicies[i].isEnacted = 0;
-      dispatch(startEditingPolicy(allPolicies[i]));
+      dispatch(startEditingPolicy(allPolicies[i], jwt));
     }
     setTimeout(() => randomizeDeck(allPolicies), 500);
+    fetchAll();
   };
 
   const resetDeckOrder = (array) => {
     for (let i = 0; i < array.length; i++) {
       array[i].deckOrder = i;
-      dispatch(startEditingPolicy(array[i]));
+      dispatch(startEditingPolicy(array[i], jwt));
     }
   };
 
@@ -85,8 +106,8 @@ function DashboardComponent() {
       <span className="button important" onClick={() => enactTop()}>
         Enact Top Policy
       </span>
-      <p>Deck: {policyDeck.length}</p>
-      <p>Discarded: {discarded.length}</p>
+      <p>Deck: {deckPolicies.length}</p>
+      <p>Discarded: {discardedPolicies.length}</p>
       <Link className="button" to="/officials">
         Draw Policies
       </Link>
@@ -94,14 +115,14 @@ function DashboardComponent() {
         <Board
           type="Liberal"
           enactedCount={
-            enacted.filter((card) => card.type === "Liberal").length
+            enactedPolicies.filter((card) => card.type === "Liberal").length
           }
           playerCount={playerCount}
         />
         <Board
           type="Fascist"
           enactedCount={
-            enacted.filter((card) => card.type === "Fascist").length
+            enactedPolicies.filter((card) => card.type === "Fascist").length
           }
           playerCount={playerCount}
         />

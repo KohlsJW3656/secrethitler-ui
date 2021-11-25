@@ -10,15 +10,51 @@ const initialState = {
   notification: {},
   users: [],
   allPolicies: [],
+  drawPolicies: [],
+  deckPolicies: [],
+  discardedPolicies: [],
+  enactedPolicies: [],
+  notEnactedPolicies: [],
+  topPolicy: {},
 };
 
 function reducer(state = initialState, action) {
   switch (action.type) {
     /**** Policies  ****/
-    case Action.FinishLoadingPolicies:
+    case Action.FinishLoadingAllPolicies:
       return {
         ...state,
         allPolicies: action.payload,
+      };
+    case Action.FinishLoadingDrawPolicies:
+      return {
+        ...state,
+        drawPolicies: action.payload,
+      };
+    case Action.FinishLoadingDeckPolicies:
+      return {
+        ...state,
+        deckPolicies: action.payload,
+      };
+    case Action.FinishLoadingDiscardedPolicies:
+      return {
+        ...state,
+        discardedPolicies: action.payload,
+      };
+    case Action.FinishLoadingEnactedPolicies:
+      return {
+        ...state,
+        enactedPolicies: action.payload,
+      };
+    case Action.FinishLoadingNotEnactedPolicies:
+      return {
+        ...state,
+        notEnactedPolicies: action.payload,
+      };
+    case Action.FinishLoadingTopPolicy:
+      return {
+        ...state,
+        topPolicy: action.payload,
       };
     case Action.FinishEditingPolicy:
       return {
@@ -30,6 +66,45 @@ function reducer(state = initialState, action) {
             return policy;
           }
         }),
+        drawPolicies: state.drawPolicies.map((policy) => {
+          if (policy.policy_id === action.policy_id) {
+            return action.payload;
+          } else {
+            return policy;
+          }
+        }),
+        deckPolicies: state.deckPolicies.map((policy) => {
+          if (policy.policy_id === action.policy_id) {
+            return action.payload;
+          } else {
+            return policy;
+          }
+        }),
+        discardedPolicies: state.discardedPolicies.map((policy) => {
+          if (policy.policy_id === action.policy_id) {
+            return action.payload;
+          } else {
+            return policy;
+          }
+        }),
+        enactedPolicies: state.enactedPolicies.map((policy) => {
+          if (policy.policy_id === action.policy_id) {
+            return action.payload;
+          } else {
+            return policy;
+          }
+        }),
+        notEnactedPolicies: state.notEnactedPolicies.map((policy) => {
+          if (policy.policy_id === action.policy_id) {
+            return action.payload;
+          } else {
+            return policy;
+          }
+        }),
+        topPolicy:
+          state.topPolicy.policy_id === action.policy_id
+            ? action.payload
+            : state.topPolicy,
       };
     /**** User Login  ****/
     case Action.FinishLoggingInUser:
@@ -59,7 +134,6 @@ function reducer(state = initialState, action) {
         user: {},
         admin: false,
         email: action.payload,
-        phones: [],
         users: [],
       };
     /**** User Signup  ****/

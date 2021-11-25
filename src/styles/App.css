@@ -51,3 +51,7 @@ hr {
 .alert p {
   color: black !important;
 }
+
+.inline {
+  display: inline-block;
+}
