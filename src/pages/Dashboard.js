@@ -1,9 +1,9 @@
-import "../styles/dashboard.css";
 import React, { useEffect, useState } from "react";
 import SideBar from "../components/SideBar";
 
 import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
+import Container from "react-bootstrap/Container";
 import DashboardComponent from "../components/DashboardComponent";
 
 function Dashboard({ history }) {
@@ -19,7 +19,9 @@ function Dashboard({ history }) {
   return (
     <>
       <SideBar history={history} active="dashboard" />
-      <DashboardComponent history={history} />
+      <Container>
+        <DashboardComponent history={history} />
+      </Container>
     </>
   );
 }

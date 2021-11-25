@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import "./styles/App.css";
-import "./styles/nav.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import Container from "react-bootstrap/Container";
 import { io } from "socket.io-client";
 import { getAllPolicies } from "./actions";
+
+import "./styles/App.css";
+import "./styles/nav.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";

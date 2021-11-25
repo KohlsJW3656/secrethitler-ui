@@ -24,7 +24,7 @@ a {
 
 h1,
 p {
-  color: white;
+  color: rgb(254, 255, 172);
 }
 
 .content {
@@ -41,7 +41,7 @@ p {
 }
 
 label {
-  color: white;
+  color: rgb(254, 255, 172);
 }
 
 hr {

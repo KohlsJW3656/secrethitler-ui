@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Board } from "../Board";
+import { Board } from "./Board";
 import { getAllPolicies, startEditingPolicy } from "../actions";
+import { withRouter } from "react-router-dom";
 
-export function DashboardComponent() {
+import "../styles/dashboard.css";
+
+function DashboardComponent() {
   const dispatch = useDispatch();
   const allPolicies = useSelector((state) => state.allPolicies);
   const [playerCount, setPlayerCount] = useState(10);
@@ -106,3 +109,5 @@ export function DashboardComponent() {
     </div>
   );
 }
+
+export default withRouter(DashboardComponent);
