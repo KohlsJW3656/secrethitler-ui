@@ -350,8 +350,6 @@ export function startEditingUser(
   first_name,
   last_name,
   email,
-  primary_num,
-  secondary_num,
   password,
   jwt
 ) {
@@ -360,8 +358,6 @@ export function startEditingUser(
     first_name,
     last_name,
     email,
-    primary_num,
-    secondary_num,
     password,
   };
   const options = {
@@ -522,8 +518,6 @@ export function startEditingUserAdmin(
   first_name,
   last_name,
   email,
-  primary_num,
-  secondary_num,
   account_type,
   last_used,
   jwt
@@ -533,8 +527,6 @@ export function startEditingUserAdmin(
     first_name,
     last_name,
     email,
-    primary_num,
-    secondary_num,
     account_type,
   };
   const options = {

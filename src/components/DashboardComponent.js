@@ -2,19 +2,11 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Board } from "./Board";
-import {
-  startGettingAllPolicies,
-  startGettingDrawPolicies,
-  startGettingDeckPolicies,
-  startGettingDiscardedPolicies,
-  startGettingEnactedPolicies,
-  startGettingNotEnactedPolicies,
-  startGettingTopPolicy,
-  startEditingPolicy,
-} from "../actions";
+import { startGettingAllPolicies, startEditingPolicy } from "../actions";
 import { withRouter } from "react-router-dom";
 
 import "../styles/dashboard.css";
+import { Container } from "react-bootstrap";
 
 function DashboardComponent() {
   const dispatch = useDispatch();
@@ -30,18 +22,8 @@ function DashboardComponent() {
   const [playerCount, setPlayerCount] = useState(10);
 
   useEffect(() => {
-    fetchAll();
-  }, [dispatch, jwt]);
-
-  const fetchAll = () => {
     dispatch(startGettingAllPolicies(jwt));
-    dispatch(startGettingDrawPolicies(jwt));
-    dispatch(startGettingDeckPolicies(jwt));
-    dispatch(startGettingDiscardedPolicies(jwt));
-    dispatch(startGettingEnactedPolicies(jwt));
-    dispatch(startGettingNotEnactedPolicies(jwt));
-    dispatch(startGettingTopPolicy(jwt));
-  };
+  }, []);
 
   const enactTop = () => {
     topPolicy.isEnacted = 1;
@@ -49,7 +31,6 @@ function DashboardComponent() {
     resetDeckOrder(
       deckPolicies.filter((policy) => policy.policy_id !== topPolicy.policy_id)
     );
-    fetchAll();
   };
 
   const randomizeDeck = (array) => {
@@ -74,7 +55,6 @@ function DashboardComponent() {
       dispatch(startEditingPolicy(notEnactedPolicies[i], jwt));
     }
     setTimeout(() => randomizeDeck(notEnactedPolicies), 500);
-    fetchAll();
   };
 
   const resetGame = () => {
@@ -84,7 +64,6 @@ function DashboardComponent() {
       dispatch(startEditingPolicy(allPolicies[i], jwt));
     }
     setTimeout(() => randomizeDeck(allPolicies), 500);
-    fetchAll();
   };
 
   const resetDeckOrder = (array) => {
@@ -92,26 +71,32 @@ function DashboardComponent() {
       array[i].deckOrder = i;
       dispatch(startEditingPolicy(array[i], jwt));
     }
+    dispatch(startGettingAllPolicies(jwt));
   };
 
   return (
     <div>
-      <h1 className="pageTitle">Secret Hitler</h1>
-      <span className="button" onClick={() => shuffleDeck()}>
-        Shuffle Deck
-      </span>
-      <span className="button important" onClick={() => resetGame()}>
-        Reset Game
-      </span>
-      <span className="button important" onClick={() => enactTop()}>
-        Enact Top Policy
-      </span>
-      <p>Deck: {deckPolicies.length}</p>
-      <p>Discarded: {discardedPolicies.length}</p>
-      <Link className="button" to="/officials">
-        Draw Policies
-      </Link>
-      <div className="container">
+      <h1 className="pageTitle">Secret Hitler</h1>{" "}
+      <Container>
+        {" "}
+        <Link className="button" to="/officials">
+          Draw Policies
+        </Link>
+        <span className="button" onClick={() => shuffleDeck()}>
+          Shuffle Deck
+        </span>
+        <span className="button" onClick={() => enactTop()}>
+          Enact Top Policy
+        </span>
+        <span className="button" onClick={() => resetGame()}>
+          Reset Game
+        </span>
+      </Container>
+      <Container>
+        <p>Deck: {deckPolicies.length}</p>
+        <p>Discarded: {discardedPolicies.length}</p>
+      </Container>
+      <Container>
         <Board
           type="Liberal"
           enactedCount={
@@ -126,7 +111,7 @@ function DashboardComponent() {
           }
           playerCount={playerCount}
         />
-      </div>
+      </Container>
     </div>
   );
 }

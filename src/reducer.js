@@ -25,6 +25,30 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         allPolicies: action.payload,
+        drawPolicies: action.payload.filter(
+          (policy) =>
+            policy.deckOrder < 3 &&
+            policy.isDiscarded === 0 &&
+            policy.isEnacted === 0
+        ),
+        deckPolicies: action.payload.filter(
+          (policy) => policy.isDiscarded === 0 && policy.isEnacted === 0
+        ),
+        discardedPolicies: action.payload.filter(
+          (policy) => policy.isDiscarded === 1 && policy.isEnacted === 0
+        ),
+        enactedPolicies: action.payload.filter(
+          (policy) => policy.isEnacted === 1
+        ),
+        notEnactedPolicies: action.payload.filter(
+          (policy) => policy.isEnacted === 0
+        ),
+        topPolicy: action.payload.filter(
+          (policy) =>
+            policy.deckOrder === 0 &&
+            policy.isDiscarded === 0 &&
+            policy.isEnacted === 0
+        )[0],
       };
     case Action.FinishLoadingDrawPolicies:
       return {
@@ -102,9 +126,7 @@ function reducer(state = initialState, action) {
           }
         }),
         topPolicy:
-          state.topPolicy.policy_id === action.policy_id
-            ? action.payload
-            : state.topPolicy,
+          state.topPolicy.policy_id === action.policy_id ? {} : state.topPolicy,
       };
     /**** User Login  ****/
     case Action.FinishLoggingInUser:

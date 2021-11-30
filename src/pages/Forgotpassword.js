@@ -14,8 +14,7 @@ function Forgotpassword({ history }) {
 
   const onForgotPassword = (event) => {
     event.preventDefault();
-    //dispatch(startSendingEmail(email, history));
-    history.push("/resetpassword");
+    dispatch(startSendingEmail(email, history));
   };
 
   return (
@@ -44,7 +43,9 @@ function Forgotpassword({ history }) {
                 <span className="link">Login here!</span>
               </Link>
             </p>
-            <Button type="submit">Continue</Button>
+            <Button className="button" type="submit">
+              Continue
+            </Button>
           </div>
         </Form>
       </div>

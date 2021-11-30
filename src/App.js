@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import Container from "react-bootstrap/Container";
 import { io } from "socket.io-client";
-import { getAllPolicies } from "./actions";
 
 import "./styles/App.css";
 import "./styles/nav.css";
@@ -13,9 +12,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import Officials from "./pages/Officials";
+import Admin from "./pages/Admin";
+import Account from "./pages/Account";
 import Forgotpassword from "./pages/Forgotpassword";
 import Resetpassword from "./pages/Resetpassword";
-import { Officials } from "./pages/Officials";
+import EmailConfirmation from "./pages/EmailConfirmation";
 
 const history = createBrowserHistory();
 
@@ -45,29 +47,38 @@ function App() {
               <Home />
             </Container>
           </Route>
-          <Route path="/forgotpassword">
-            <Container>
-              <Forgotpassword />
-            </Container>
-          </Route>
           <Route path="/signup">
             <Container>
               <Signup />
             </Container>
           </Route>
-          <Route path="/resetpassword">
+          <Route path="/forgotpassword">
+            <Container>
+              <Forgotpassword />
+            </Container>
+          </Route>
+          <Route path="/emailconfirmation">
+            <Container>
+              <EmailConfirmation />
+            </Container>
+          </Route>
+          <Route path="/resetpassword/:jwt">
             <Container>
               <Resetpassword />
             </Container>
           </Route>
-          <Route path="/admin">{/* <Admin /> */}</Route>
+          <Route path="/admin">
+            <Admin />
+          </Route>
           <Route path="/dashboard">
             <Dashboard />
           </Route>
           <Route path="/officials">
             <Officials />
           </Route>
-          <Route path="/account">{/* <Account /> */}</Route>
+          <Route path="/account">
+            <Account />
+          </Route>
         </Switch>
       </div>
     </Router>

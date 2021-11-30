@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { BrowserRouter as useParams, withRouter } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Notification from "../components/Notification";
+import { startResettingPassword } from "../actions";
 
 import "../styles/home.css";
 
 function Resetpassword({ history }) {
+  const dispatch = useDispatch();
+  const jwt = useParams().jwt;
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
 
@@ -21,7 +24,7 @@ function Resetpassword({ history }) {
 
   const resetPassword = (event) => {
     event.preventDefault();
-    history.push("/");
+    dispatch(startResettingPassword(password2, jwt, history));
   };
 
   return (
@@ -57,7 +60,7 @@ function Resetpassword({ history }) {
           </Form.Group>
           <p className="inline"></p>
           <div className="but1">
-            <Button type="submit" className="but">
+            <Button className="button but" type="submit">
               Confirm
             </Button>
           </div>

@@ -18,9 +18,13 @@ function SideBar(props) {
   return (
     <div className="nav">
       <div className="nav-content">
-        <h3 className="p-2">
+        <h3 className="p-2 center">
           {user.first_name} {user.last_name}
         </h3>
+
+        <div className="center">
+          <img src="../images/players/1.png" />
+        </div>
 
         <div className="d-flex flex-column mt-2">
           {admin && (

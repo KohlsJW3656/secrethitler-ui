@@ -42,3 +42,7 @@ a > b {
   color: #212529;
   font-weight: bolder;
 }
+
+img {
+  width: 85%;
+}

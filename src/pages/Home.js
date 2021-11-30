@@ -61,7 +61,9 @@ function Home({ history }) {
               </Link>
             </p>
             <div className="c">
-              <Button type="submit">Login</Button>
+              <Button type="submit" className="button">
+                Login
+              </Button>
             </div>
           </div>
         </Form>

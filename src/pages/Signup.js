@@ -116,7 +116,9 @@ function Signup({ history }) {
             </Link>
           </p>
           <div className="but2">
-            <Button type="submit">Signup</Button>
+            <Button className="button" type="submit">
+              Signup
+            </Button>
           </div>
         </Form>
       </div>

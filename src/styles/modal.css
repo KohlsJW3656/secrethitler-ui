@@ -1,0 +1,20 @@
+.modal-header {
+  background-color: rgba(153, 2, 0);
+}
+
+.modal-title {
+  color: rgb(254, 255, 172);
+}
+
+.modal-body {
+  background-color: rgb(230, 100, 67);
+  color: rgb(254, 255, 172);
+}
+
+.close {
+  color: rgb(254, 255, 172);
+}
+
+.close:hover {
+  color: rgb(254, 255, 172);
+}
