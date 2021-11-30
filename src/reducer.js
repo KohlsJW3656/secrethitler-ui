@@ -16,6 +16,7 @@ const initialState = {
   enactedPolicies: [],
   notEnactedPolicies: [],
   topPolicy: {},
+  playerCount: 0,
 };
 
 function reducer(state = initialState, action) {
@@ -195,6 +196,12 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         notification: {},
+      };
+    /**** Sockets ****/
+    case Action.SetPlayerCount:
+      return {
+        ...state,
+        playerCount: action.payload,
       };
     default:
       return state;

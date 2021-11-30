@@ -23,6 +23,9 @@ export const Action = Object.freeze({
   /* Notifications */
   AddNotification: "AddNotification",
   DismissNotification: "DismissNotification",
+
+  /* Sockets */
+  SetPlayerCount: "SetPlayerCount",
 });
 
 export const host = "https://secrethitleronline.duckdns.org:8445";
@@ -662,5 +665,14 @@ export function DismissNotification() {
   return {
     type: Action.DismissNotification,
     payload: {},
+  };
+}
+
+/********************************** Sockets **********************************/
+
+export function setPlayerCount(playerCount) {
+  return {
+    type: Action.SetPlayerCount,
+    payload: playerCount,
   };
 }
