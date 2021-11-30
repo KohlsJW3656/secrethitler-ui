@@ -12,6 +12,7 @@ import { Container } from "react-bootstrap";
 function DashboardComponent() {
   const dispatch = useDispatch();
   const jwt = useSelector((state) => state.jwt);
+  const playerCount = useSelector((state) => state.playerCount);
   const allPolicies = useSelector((state) => state.allPolicies);
   const drawPolicies = useSelector((state) => state.drawPolicies);
   const deckPolicies = useSelector((state) => state.deckPolicies);
@@ -19,8 +20,6 @@ function DashboardComponent() {
   const enactedPolicies = useSelector((state) => state.enactedPolicies);
   const notEnactedPolicies = useSelector((state) => state.notEnactedPolicies);
   const topPolicy = useSelector((state) => state.topPolicy);
-
-  const [playerCount, setPlayerCount] = useState(10);
 
   useEffect(() => {
     dispatch(startGettingAllPolicies(jwt));
@@ -79,9 +78,16 @@ function DashboardComponent() {
 
   return (
     <div>
-      <h1 className="pageTitle">Secret Hitler</h1>{" "}
+      <h1 className="pageTitle">Secret Hitler</h1>
       <Container>
-        {" "}
+        <p>Connected Players: {playerCount}</p>
+      </Container>
+
+      <Container>
+        <p>Deck: {deckPolicies.length}</p>
+        <p>Discarded: {discardedPolicies.length}</p>
+      </Container>
+      <Container>
         <Link className="button" to="/officials">
           Draw Policies
         </Link>
@@ -94,10 +100,6 @@ function DashboardComponent() {
         <span className="button" onClick={() => resetGame()}>
           Reset Game
         </span>
-      </Container>
-      <Container>
-        <p>Deck: {deckPolicies.length}</p>
-        <p>Discarded: {discardedPolicies.length}</p>
       </Container>
       <Container>
         <Board

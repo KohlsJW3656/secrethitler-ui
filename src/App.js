@@ -9,6 +9,8 @@ import "./styles/App.css";
 import "./styles/nav.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import { setPlayerCount } from "./actions";
+
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
@@ -24,10 +26,6 @@ const history = createBrowserHistory();
 function App() {
   const dispatch = useDispatch();
   const [socket, setSocket] = useState();
-  const allPolicies = useSelector((state) => state.allPolicies);
-  const policyDeck = allPolicies.filter(
-    (policy) => policy.isDiscarded === 0 && policy.isEnacted === 0
-  );
 
   useEffect(() => {
     const s = io("https://secrethitleronline.duckdns.org:8445");
@@ -37,6 +35,13 @@ function App() {
       s.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (socket == null) return;
+    socket.on("users-conneceted", (socketCount) => {
+      dispatch(setPlayerCount(socketCount));
+    });
+  }, [socket]);
 
   return (
     <Router history={history}>
