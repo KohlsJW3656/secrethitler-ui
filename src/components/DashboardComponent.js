@@ -23,7 +23,7 @@ function DashboardComponent() {
 
   useEffect(() => {
     dispatch(startGettingAllPolicies(jwt));
-  }, []);
+  }, [dispatch, jwt]);
 
   const enactTop = () => {
     topPolicy.isEnacted = 1;
