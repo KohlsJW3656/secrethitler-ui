@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Board } from "./Board";
 import { startGettingAllPolicies, startEditingPolicy } from "../actions";
 import { withRouter } from "react-router-dom";
+import { Policy } from "../components/Policy";
 
 import "../styles/dashboard.css";
 import { Container } from "react-bootstrap";
@@ -71,8 +72,10 @@ function DashboardComponent() {
       array[i].deckOrder = i;
       dispatch(startEditingPolicy(array[i], jwt));
     }
-    dispatch(startGettingAllPolicies(jwt));
+    //dispatch(startGettingAllPolicies(jwt));
   };
+
+  console.log(allPolicies);
 
   return (
     <div>
@@ -111,6 +114,15 @@ function DashboardComponent() {
           }
           playerCount={playerCount}
         />
+      </Container>
+      <Container>
+        {allPolicies.map((policy) => (
+          <Policy
+            key={policy.policy_id}
+            policy={policy}
+            drawPolicies={drawPolicies}
+          />
+        ))}
       </Container>
     </div>
   );

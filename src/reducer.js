@@ -83,50 +83,36 @@ function reducer(state = initialState, action) {
     case Action.FinishEditingPolicy:
       return {
         ...state,
-        allPolicies: state.allPolicies.map((policy) => {
-          if (policy.policy_id === action.policy_id) {
-            return action.payload;
-          } else {
-            return policy;
-          }
-        }),
-        drawPolicies: state.drawPolicies.map((policy) => {
-          if (policy.policy_id === action.policy_id) {
-            return action.payload;
-          } else {
-            return policy;
-          }
-        }),
-        deckPolicies: state.deckPolicies.map((policy) => {
-          if (policy.policy_id === action.policy_id) {
-            return action.payload;
-          } else {
-            return policy;
-          }
-        }),
-        discardedPolicies: state.discardedPolicies.map((policy) => {
-          if (policy.policy_id === action.policy_id) {
-            return action.payload;
-          } else {
-            return policy;
-          }
-        }),
-        enactedPolicies: state.enactedPolicies.map((policy) => {
-          if (policy.policy_id === action.policy_id) {
-            return action.payload;
-          } else {
-            return policy;
-          }
-        }),
-        notEnactedPolicies: state.notEnactedPolicies.map((policy) => {
-          if (policy.policy_id === action.policy_id) {
-            return action.payload;
-          } else {
-            return policy;
-          }
-        }),
-        topPolicy:
-          state.topPolicy.policy_id === action.policy_id ? {} : state.topPolicy,
+        allPolicies: state.allPolicies.map((policy) =>
+          policy.policy_id === action.payload.policy_id
+            ? action.payload
+            : policy
+        ),
+        drawPolicies: state.drawPolicies.map((policy) =>
+          policy.policy_id === action.payload.policy_id
+            ? action.payload
+            : policy
+        ),
+        deckPolicies: state.deckPolicies.map((policy) =>
+          policy.policy_id === action.payload.policy_id
+            ? action.payload
+            : policy
+        ),
+        discardedPolicies: state.discardedPolicies.map((policy) =>
+          policy.policy_id === action.payload.policy_id
+            ? action.payload
+            : policy
+        ),
+        enactedPolicies: state.enactedPolicies.map((policy) =>
+          policy.policy_id === action.payload.policy_id
+            ? action.payload
+            : policy
+        ),
+        notEnactedPolicies: state.notEnactedPolicies.map((policy) =>
+          policy.policy_id === action.payload.policy_id
+            ? action.payload
+            : policy
+        ),
       };
     /**** User Login  ****/
     case Action.FinishLoggingInUser:
