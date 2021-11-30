@@ -106,7 +106,7 @@ function Signup({ history }) {
           <ReCAPTCHA
             required
             ref={recaptchaRef}
-            sitekey="6LeXDMgcAAAAAPjWUEhJ0ioTXQhwDV9WlRzfJBA3"
+            sitekey="6Le-x2odAAAAAFjtvQunssJHYJB5z_Eavag8HndZ"
           />
 
           <p className="inline">
