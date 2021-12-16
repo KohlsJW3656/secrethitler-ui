@@ -1,3 +1,5 @@
+import { io } from "socket.io-client";
+
 export const Action = Object.freeze({
   /* Policies */
   FinishLoadingAllPolicies: "FinishLoadingAllPolicies",
@@ -25,7 +27,9 @@ export const Action = Object.freeze({
   DismissNotification: "DismissNotification",
 
   /* Sockets */
+  SetSocket: "SetSocket",
   SetPlayerCount: "SetPlayerCount",
+  SetGameLobby: "SetGameLobby",
 });
 
 export const host = "https://secrethitleronline.duckdns.org:8445";
@@ -669,6 +673,21 @@ export function DismissNotification() {
 }
 
 /********************************** Sockets **********************************/
+
+export function setSocket() {
+  const socket = io(host);
+  return {
+    type: Action.SetSocket,
+    payload: socket,
+  };
+}
+
+export function setGameLobby(data) {
+  return {
+    type: Action.SetGameLobby,
+    payload: data,
+  };
+}
 
 export function setPlayerCount(playerCount) {
   return {

@@ -3,17 +3,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import Container from "react-bootstrap/Container";
-import { io } from "socket.io-client";
 
 import "./styles/App.css";
 import "./styles/nav.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { setPlayerCount } from "./actions";
+import { setSocket, setPlayerCount, setGameLobby } from "./actions";
 
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import Lobby from "./pages/Lobby";
+import Game from "./pages/Game";
 import Officials from "./pages/Officials";
 import Admin from "./pages/Admin";
 import Account from "./pages/Account";
@@ -25,14 +26,13 @@ const history = createBrowserHistory();
 
 function App() {
   const dispatch = useDispatch();
-  const [socket, setSocket] = useState();
+  const socket = useSelector((state) => state.socket);
 
   useEffect(() => {
-    const s = io("https://secrethitleronline.duckdns.org:8445");
-    setSocket(s);
+    dispatch(setSocket());
 
     return () => {
-      s.disconnect();
+      socket.disconnect();
     };
   }, []);
 
@@ -40,6 +40,10 @@ function App() {
     if (socket == null) return;
     socket.on("users-conneceted", (socketCount) => {
       dispatch(setPlayerCount(socketCount));
+    });
+    socket.on("connectToRoom", (data) => {
+      //console.log(data);
+      dispatch(setGameLobby(data));
     });
   }, [socket]);
 
@@ -77,6 +81,12 @@ function App() {
           </Route>
           <Route path="/dashboard">
             <Dashboard />
+          </Route>
+          <Route path="/lobby">
+            <Lobby />
+          </Route>
+          <Route path="/game">
+            <Game />
           </Route>
           <Route path="/officials">
             <Officials />

@@ -12,3 +12,8 @@
   flex-wrap: wrap;
   justify-content: space-around;
 }
+
+.board {
+  width: 80%;
+  margin: 20px;
+}

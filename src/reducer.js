@@ -4,6 +4,7 @@ const initialState = {
   isWaiting: false,
   authenticated: false,
   jwt: "",
+  socket: null,
   user: {},
   email: "",
   admin: false,
@@ -17,6 +18,9 @@ const initialState = {
   notEnactedPolicies: [],
   topPolicy: {},
   playerCount: 0,
+  lobbyId: "",
+  lobbyUsers: [],
+  lobbyPlayerCount: 0,
 };
 
 function reducer(state = initialState, action) {
@@ -198,10 +202,22 @@ function reducer(state = initialState, action) {
         notification: {},
       };
     /**** Sockets ****/
+    case Action.SetSocket:
+      return {
+        ...state,
+        socket: action.payload,
+      };
     case Action.SetPlayerCount:
       return {
         ...state,
         playerCount: action.payload,
+      };
+    case Action.SetGameLobby:
+      return {
+        ...state,
+        lobbyId: action.payload.lobbyId,
+        lobbyUsers: action.payload.lobbyUsers,
+        lobbyPlayerCount: action.payload.lobbyPlayerCount,
       };
     default:
       return state;

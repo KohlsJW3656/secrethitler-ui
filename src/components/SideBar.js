@@ -42,6 +42,12 @@ function SideBar(props) {
             Dashboard
           </Link>
           <Link
+            to="/game"
+            className={`aLink ${props.active === "game" ? "active" : ""}`}
+          >
+            Game
+          </Link>
+          <Link
             to="/account"
             className={`aLink ${props.active === "account" ? "active" : ""}`}
           >
