@@ -10,7 +10,8 @@ function GameOptionsModal(props) {
   const [username, setUsername] = useState(
     props.user.first_name + " " + props.user.last_name
   );
-  const [lobbyId, setLobbyId] = useState("");
+  const [lobbyCode, setLobbyCode] = useState("");
+  const [gameType, setGameType] = useState(0);
 
   useEffect(() => {
     setOpen(props.open);
@@ -24,7 +25,7 @@ function GameOptionsModal(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.onSubmit(username, lobbyId);
+    props.onSubmit(username, lobbyCode, gameType);
   };
 
   return (
@@ -51,14 +52,28 @@ function GameOptionsModal(props) {
               onChange={(e) => setUsername(e.target.value)}
             />
           </Form.Group>
+          {!isJoin && (
+            <Form.Group>
+              <Form.Label>Game Type</Form.Label>
+              <Form.Control
+                required
+                as="select"
+                value={gameType}
+                onChange={(e) => setGameType(parseInt(e.target.value))}
+              >
+                <option value="0">Public</option>
+                <option value="1">Private</option>
+              </Form.Control>
+            </Form.Group>
+          )}
           {isJoin && (
             <Form.Group>
               <Form.Label>Lobby Id</Form.Label>
               <Form.Control
                 required
                 type="text"
-                value={lobbyId}
-                onChange={(e) => setLobbyId(e.target.value)}
+                value={lobbyCode}
+                onChange={(e) => setLobbyCode(e.target.value)}
               />
             </Form.Group>
           )}

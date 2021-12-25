@@ -9,11 +9,12 @@ import GameOptionsModal from "./GameOptionsModal";
 import { Container } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import randomstring from "randomstring";
+import { startCreatingLobby } from "../actions";
 
 function GameComponent(props) {
   const dispatch = useDispatch();
   const history = props.history;
-  const randomLobbyId = randomstring;
+  const randomLobbyCode = randomstring;
   const jwt = useSelector((state) => state.jwt);
   const socket = useSelector((state) => state.socket);
   const user = useSelector((state) => state.user);
@@ -30,13 +31,14 @@ function GameComponent(props) {
     setGameOptionsOpen(false);
   };
 
-  const handleGameOptions = (username, lobbyId) => {
-    if (lobbyId === "") {
-      lobbyId = randomLobbyId.generate(5);
+  const handleGameOptions = (username, lobbyCode, gameType) => {
+    if (lobbyCode === "") {
+      lobbyCode = randomLobbyCode.generate(5);
+      dispatch(startCreatingLobby(lobbyCode, gameType, history, jwt));
     }
 
-    socket.emit("joinLobby", { username, lobbyId });
-    history.push("/lobby");
+    socket.emit("joinLobby", { username, lobbyCode });
+    //history.push("/lobby");
   };
 
   const createGame = () => {

@@ -1,6 +1,9 @@
 import { io } from "socket.io-client";
 
 export const Action = Object.freeze({
+  /* Lobbies */
+  FinishCreatingLobby: "FinishCreatingLobby",
+
   /* Policies */
   FinishLoadingAllPolicies: "FinishLoadingAllPolicies",
   FinishLoadingDrawPolicies: "FinishLoadingDrawPolicies",
@@ -39,6 +42,54 @@ function checkForErrors(response) {
     throw Error(`${response.status}: ${response.statusText}`);
   }
   return response;
+}
+
+/*********************************** Lobbies ***********************************/
+export function startCreatingLobby(lobby_code, private_game, history, jwt) {
+  const lobby = { lobby_code, private_game };
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(lobby),
+  };
+
+  return (dispatch) => {
+    fetch(`${host}/lobby/create`, options)
+      .then(checkForErrors)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.ok) {
+          lobby.lobby_id = data.id;
+          dispatch(FinishCreatingLobby(lobby));
+          history.push("/lobby");
+          dispatch(
+            AddNotification({
+              type: "success",
+              message: "User Created Successfully!",
+            })
+          );
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        dispatch(
+          AddNotification({
+            type: "danger",
+            message: "Warning! Failed to create lobby!!",
+          })
+        );
+      });
+  };
+}
+
+export function FinishCreatingLobby(lobby) {
+  return {
+    type: Action.FinishCreatingLobby,
+    payload: lobby,
+  };
 }
 
 /*********************************** Policies ***********************************/
@@ -682,16 +733,16 @@ export function setSocket() {
   };
 }
 
-export function setGameLobby(data) {
-  return {
-    type: Action.SetGameLobby,
-    payload: data,
-  };
-}
-
 export function setPlayerCount(playerCount) {
   return {
     type: Action.SetPlayerCount,
     payload: playerCount,
+  };
+}
+
+export function setGameLobby(data) {
+  return {
+    type: Action.SetGameLobby,
+    payload: data,
   };
 }

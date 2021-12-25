@@ -18,13 +18,18 @@ const initialState = {
   notEnactedPolicies: [],
   topPolicy: {},
   playerCount: 0,
-  lobbyId: "",
   lobbyUsers: [],
-  lobbyPlayerCount: 0,
+  lobby: {},
 };
 
 function reducer(state = initialState, action) {
   switch (action.type) {
+    /**** Policies  ****/
+    case Action.FinishCreatingLobby:
+      return {
+        ...state,
+        lobby: action.payload,
+      };
     /**** Policies  ****/
     case Action.FinishLoadingAllPolicies:
       return {
@@ -215,7 +220,7 @@ function reducer(state = initialState, action) {
     case Action.SetGameLobby:
       return {
         ...state,
-        lobbyId: action.payload.lobbyId,
+        lobbyCode: action.payload.lobbyCode,
         lobbyUsers: action.payload.lobbyUsers,
         lobbyPlayerCount: action.payload.lobbyPlayerCount,
       };

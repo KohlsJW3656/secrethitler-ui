@@ -42,7 +42,7 @@ function App() {
       dispatch(setPlayerCount(socketCount));
     });
     socket.on("connectToRoom", (data) => {
-      //console.log(data);
+      console.log(data);
       dispatch(setGameLobby(data));
     });
   }, [socket]);
