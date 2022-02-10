@@ -1,8 +1,8 @@
 import { io } from "socket.io-client";
 
 export const Action = Object.freeze({
-  /* Lobbies */
-  FinishCreatingLobby: "FinishCreatingLobby",
+  /* Games */
+  FinishCreatingGame: "FinishCreatingGame",
 
   /* Policies */
   FinishLoadingAllPolicies: "FinishLoadingAllPolicies",
@@ -44,31 +44,31 @@ function checkForErrors(response) {
   return response;
 }
 
-/*********************************** Lobbies ***********************************/
-export function startCreatingLobby(lobby_code, private_game, history, jwt) {
-  const lobby = { lobby_code, private_game };
+/*********************************** Games ***********************************/
+export function startCreatingGame(game_code, private_game, history, jwt) {
+  const game = { game_code, private_game };
   const options = {
     method: "POST",
     headers: {
       Authorization: `Bearer ${jwt}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(lobby),
+    body: JSON.stringify(game),
   };
 
   return (dispatch) => {
-    fetch(`${host}/lobby/create`, options)
+    fetch(`${host}/game/create`, options)
       .then(checkForErrors)
       .then((response) => response.json())
       .then((data) => {
         if (data.ok) {
-          lobby.lobby_id = data.id;
-          dispatch(FinishCreatingLobby(lobby));
+          game.game_id = data.id;
+          dispatch(FinishCreatingGame(game));
           history.push("/lobby");
           dispatch(
             AddNotification({
               type: "success",
-              message: "User Created Successfully!",
+              message: "Game Created Successfully!",
             })
           );
         }
@@ -78,17 +78,17 @@ export function startCreatingLobby(lobby_code, private_game, history, jwt) {
         dispatch(
           AddNotification({
             type: "danger",
-            message: "Warning! Failed to create lobby!!",
+            message: "Warning! Failed to create game!!",
           })
         );
       });
   };
 }
 
-export function FinishCreatingLobby(lobby) {
+export function FinishCreatingGame(game) {
   return {
-    type: Action.FinishCreatingLobby,
-    payload: lobby,
+    type: Action.FinishCreatingGame,
+    payload: game,
   };
 }
 
