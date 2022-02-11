@@ -8,7 +8,7 @@ import "./styles/App.css";
 import "./styles/nav.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { setSocket, setPlayerCount, setGameLobby } from "./actions";
+import { setSocket, setPlayerCount, setGameUsers } from "./actions";
 
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
@@ -42,8 +42,7 @@ function App() {
       dispatch(setPlayerCount(socketCount));
     });
     socket.on("connectToRoom", (data) => {
-      console.log(data);
-      dispatch(setGameLobby(data));
+      dispatch(setGameUsers(data));
     });
   }, [socket]);
 

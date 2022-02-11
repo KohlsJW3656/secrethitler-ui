@@ -18,17 +18,34 @@ const initialState = {
   notEnactedPolicies: [],
   topPolicy: {},
   playerCount: 0,
-  lobbyUsers: [],
-  lobby: {},
+  gameUsers: [],
+  game: {},
+  gameUser: {},
+  joinableGames: [],
 };
 
 function reducer(state = initialState, action) {
   switch (action.type) {
-    /**** Policies  ****/
-    case Action.FinishCreatingLobby:
+    /**** Game  ****/
+    case Action.FinishCreatingGame:
       return {
         ...state,
-        lobby: action.payload,
+        game: action.payload,
+        joinableGames: [action.payload],
+      };
+    case Action.FinishJoiningGame:
+      return {
+        ...state,
+        game: state.joinableGames.filter(
+          (joinableGame) => (joinableGame.game_id = action.payload.game_id)
+        )[0],
+        gameUser: action.payload,
+        gameUsers: [action.payload],
+      };
+    case Action.FinishLoadingJoinableGames:
+      return {
+        ...state,
+        joinableGames: action.payload,
       };
     /**** Policies  ****/
     case Action.FinishLoadingAllPolicies:
@@ -217,12 +234,13 @@ function reducer(state = initialState, action) {
         ...state,
         playerCount: action.payload,
       };
-    case Action.SetGameLobby:
+    case Action.SetGameUsers:
       return {
         ...state,
-        lobbyCode: action.payload.lobbyCode,
-        lobbyUsers: action.payload.lobbyUsers,
-        lobbyPlayerCount: action.payload.lobbyPlayerCount,
+        gameUser: action.payload.result.filter(
+          (gameUser) => (gameUser.user_id = state.user.user_id)
+        )[0],
+        gameUsers: action.payload.result,
       };
     default:
       return state;

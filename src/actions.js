@@ -3,6 +3,8 @@ import { io } from "socket.io-client";
 export const Action = Object.freeze({
   /* Games */
   FinishCreatingGame: "FinishCreatingGame",
+  FinishJoiningGame: "FinishJoiningGame",
+  FinishLoadingJoinableGames: "FinishLoadingJoinableGames",
 
   /* Policies */
   FinishLoadingAllPolicies: "FinishLoadingAllPolicies",
@@ -32,7 +34,7 @@ export const Action = Object.freeze({
   /* Sockets */
   SetSocket: "SetSocket",
   SetPlayerCount: "SetPlayerCount",
-  SetGameLobby: "SetGameLobby",
+  SetGameUsers: "SetGameUsers",
 });
 
 export const host = "https://secrethitleronline.duckdns.org:8445";
@@ -45,7 +47,14 @@ function checkForErrors(response) {
 }
 
 /*********************************** Games ***********************************/
-export function startCreatingGame(game_code, private_game, history, jwt) {
+export function startCreatingGame(
+  game_code,
+  private_game,
+  username,
+  socket,
+  history,
+  jwt
+) {
   const game = { game_code, private_game };
   const options = {
     method: "POST",
@@ -64,12 +73,14 @@ export function startCreatingGame(game_code, private_game, history, jwt) {
         if (data.ok) {
           game.game_id = data.id;
           dispatch(FinishCreatingGame(game));
-          history.push("/lobby");
           dispatch(
             AddNotification({
               type: "success",
               message: "Game Created Successfully!",
             })
+          );
+          dispatch(
+            startJoiningGame(game.game_id, username, socket, history, jwt)
           );
         }
       })
@@ -89,6 +100,83 @@ export function FinishCreatingGame(game) {
   return {
     type: Action.FinishCreatingGame,
     payload: game,
+  };
+}
+
+export function startJoiningGame(game_id, username, socket, history, jwt) {
+  const gameUser = { game_id, username };
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(gameUser),
+  };
+
+  return (dispatch) => {
+    fetch(`${host}/gameuser/join`, options)
+      .then(checkForErrors)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.ok) {
+          gameUser.game_user_id = data.id;
+          dispatch(FinishJoiningGame(gameUser));
+          socket.emit("join-game", { username, game_id });
+          history.push("/lobby");
+          dispatch(
+            AddNotification({
+              type: "success",
+              message: "User Successfully joined!",
+            })
+          );
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        dispatch(
+          AddNotification({
+            type: "danger",
+            message: "Warning! Failed to join game!!",
+          })
+        );
+      });
+  };
+}
+
+export function FinishJoiningGame(gameUser) {
+  return {
+    type: Action.FinishJoiningGame,
+    payload: gameUser,
+  };
+}
+
+export function startGettingJoinableGames(jwt) {
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  };
+  return (dispatch) => {
+    fetch(`${host}/game/all/joinable`, options)
+      .then(checkForErrors)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.ok) {
+          dispatch(FinishLoadingJoinableGames(data.joinableGames));
+        }
+      })
+      .catch((e) => console.error(e));
+  };
+}
+
+export function FinishLoadingJoinableGames(joinableGames) {
+  return {
+    type: Action.FinishLoadingJoinableGames,
+    payload: joinableGames,
   };
 }
 
@@ -740,9 +828,9 @@ export function setPlayerCount(playerCount) {
   };
 }
 
-export function setGameLobby(data) {
+export function setGameUsers(data) {
   return {
-    type: Action.SetGameLobby,
+    type: Action.SetGameUsers,
     payload: data,
   };
 }

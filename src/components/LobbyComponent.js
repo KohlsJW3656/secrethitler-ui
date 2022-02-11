@@ -13,8 +13,8 @@ import { withRouter } from "react-router-dom";
 
 function LobbyComponent(props) {
   const dispatch = useDispatch();
-  const lobby = useSelector((state) => state.lobby);
-  const lobbyUsers = useSelector((state) => state.lobbyUsers);
+  const game = useSelector((state) => state.game);
+  const gameUsers = useSelector((state) => state.gameUsers);
   const jwt = useSelector((state) => state.jwt);
   const [errorMessage, setErrorMessage] = useState("");
   const [displayErrorOpen, setDisplayErrorOpen] = useState(false);
@@ -61,17 +61,17 @@ function LobbyComponent(props) {
       <Notification></Notification>
       <h1 className="pageTitle">Secret Hitler</h1>
       <Container>
-        <p>Lobby Code: {lobby.lobby_code}</p>
+        <p>Game Code: {game.game_code}</p>
       </Container>
       <Container>
-        <p>Connected Players: {lobby.player_count}</p>
+        <p>Connected Players: {gameUsers.length}</p>
       </Container>
       <Container></Container>
       <Container>
         <BootstrapTable
           bootstrap4
           keyField="username"
-          data={lobbyUsers}
+          data={gameUsers}
           columns={userColumns}
           noDataIndication="No users connected"
           selectRow={userSelect}
