@@ -38,7 +38,7 @@ function App() {
 
   useEffect(() => {
     if (socket == null) return;
-    socket.on("users-conneceted", (socketCount) => {
+    socket.on("users-connected", (socketCount) => {
       dispatch(setPlayerCount(socketCount));
     });
     socket.on("connectToRoom", (data) => {
