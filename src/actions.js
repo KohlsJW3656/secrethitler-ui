@@ -818,7 +818,7 @@ export function DismissNotification() {
 /********************************** Sockets **********************************/
 
 export function setSocket() {
-  const socket = io("http://localhost:3445");
+  const socket = io(host);
   return {
     type: Action.SetSocket,
     payload: socket,
