@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, withRouter } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -13,6 +13,12 @@ function Home({ history }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const socket = useSelector((state) => state.socket);
+
+  /* On successful login, send client to dashboard */
+  useEffect(() => {
+    if (socket == null) return;
+    socket.on("login", () => history.push("/dashboard"));
+  }, [socket]);
 
   const onLogin = (event) => {
     event.preventDefault();

@@ -9,10 +9,11 @@ function SideBar(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const admin = useSelector((state) => state.admin);
+  const socket = useSelector((state) => state.socket);
 
   const handleLogout = (event) => {
     event.preventDefault();
-    dispatch(startLoggingOutUser(props.history));
+    dispatch(startLoggingOutUser(socket, props.history));
   };
 
   return (

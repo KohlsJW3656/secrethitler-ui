@@ -416,7 +416,7 @@ export function FinishEditingPolicy(policy) {
 
 /*********************************** User Login ***********************************/
 
-export function startLoggingInUser(email, password, socket, history) {
+export function startLoggingInUser(email, password, socket) {
   const source = "Website";
   const user = { email, password, source };
   const loginOptions = {
@@ -435,8 +435,6 @@ export function startLoggingInUser(email, password, socket, history) {
       .then((data) => {
         if (data.ok) {
           dispatch(finishLoggingInUser(data.jwt));
-          history.push("/dashboard");
-
           const getUserOptions = {
             method: "GET",
             headers: {
@@ -554,10 +552,14 @@ export function FinishEditingUser(user) {
 
 /*********************************** User Logout ***********************************/
 
-export function startLoggingOutUser(history) {
+export function startLoggingOutUser(socket, history, message) {
   return (dispatch) => {
     document.cookie = "jwt= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+    socket.emit("logout");
     dispatch(finishLoggingOutUser());
+    if (message) {
+      dispatch(AddNotification({ type: "danger", message: message }));
+    }
     history.push("/");
   };
 }

@@ -8,7 +8,12 @@ import "./styles/App.css";
 import "./styles/nav.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { setSocket, setPlayerCount, setGameUsers } from "./actions";
+import {
+  setSocket,
+  setPlayerCount,
+  setGameUsers,
+  startLoggingOutUser,
+} from "./actions";
 
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
@@ -38,12 +43,13 @@ function App() {
 
   useEffect(() => {
     if (socket == null) return;
-    socket.on("users-connected", (socketCount) => {
-      dispatch(setPlayerCount(socketCount));
-    });
-    socket.on("connectToRoom", (data) => {
-      dispatch(setGameUsers(data));
-    });
+    socket.on("users-connected", (playerCount) =>
+      dispatch(setPlayerCount(playerCount))
+    );
+    socket.on("connectToRoom", (data) => dispatch(setGameUsers(data)));
+    socket.on("logout", (message) =>
+      dispatch(startLoggingOutUser(socket, history, message))
+    );
   }, [socket]);
 
   return (
