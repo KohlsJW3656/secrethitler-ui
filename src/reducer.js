@@ -19,6 +19,7 @@ const initialState = {
   topPolicy: {},
   playerCount: 0,
   gameUsers: [],
+  gameHost: false,
   game: {},
   gameUser: {},
   joinableGames: [],
@@ -37,7 +38,7 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         game: state.joinableGames.filter(
-          (joinableGame) => (joinableGame.game_id = action.payload.game_id)
+          (joinableGame) => joinableGame.game_id === action.payload.game_id
         )[0],
         gameUser: action.payload,
         gameUsers: [action.payload],
@@ -238,9 +239,10 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         gameUser: action.payload.result.filter(
-          (gameUser) => (gameUser.user_id = state.user.user_id)
+          (gameUser) => gameUser.user_id === state.user.user_id
         )[0],
         gameUsers: action.payload.result,
+        gameHost: action.payload.result[0].user_id === state.user.user_id,
       };
     default:
       return state;

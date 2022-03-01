@@ -448,7 +448,6 @@ export function startLoggingInUser(email, password, socket) {
             .then((response) => response.json())
             .then((userData) => {
               if (userData.ok) {
-                console.log(userData.user[0].user_id);
                 socket.emit("login", { user_id: userData.user[0].user_id });
                 dispatch(finishSettingUser(userData.user[0]));
                 dispatch(DismissNotification());
@@ -819,6 +818,7 @@ export function DismissNotification() {
 
 export function setSocket() {
   const socket = io(host);
+  //const socket = io("http://localhost:3445");
   return {
     type: Action.SetSocket,
     payload: socket,

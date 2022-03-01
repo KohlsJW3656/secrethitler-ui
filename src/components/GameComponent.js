@@ -54,7 +54,7 @@ function GameComponent(props) {
 
   useEffect(() => {
     dispatch(startGettingJoinableGames(jwt));
-  }, [dispatch, selectedGame.game_id, jwt]);
+  }, [dispatch, jwt]);
 
   const handleDisplayErrorClose = () => {
     setDisplayErrorOpen(false);
@@ -79,18 +79,24 @@ function GameComponent(props) {
     }
   };
 
-  const createGame = () => {
+  const handleCreateGameClick = () => {
     setGameOptionsMode("Create");
     setGameOptionsOpen(true);
   };
 
-  const joinGame = () => {
-    setGameOptionsMode("Join");
-    setGameOptionsOpen(true);
+  const handleJoinGameClick = () => {
+    if (selectedGame.game_id !== -1) {
+      setGameOptionsMode("Join");
+      setGameOptionsOpen(true);
+    } else {
+      setErrorMessage("Please select a game to join.");
+      setDisplayErrorOpen(true);
+    }
   };
 
   return (
     <div>
+      <Notification></Notification>
       <ErrorModal
         open={displayErrorOpen}
         onClose={handleDisplayErrorClose}
@@ -102,16 +108,17 @@ function GameComponent(props) {
       <GameOptionsModal
         open={gameOptionsOpen}
         user={user}
+        selectedGame={selectedGame}
         onClose={handleGameOptionsClose}
         onSubmit={handleGameOptions}
         mode={gameOptionsMode}
       />
       <h1 className="pageTitle">Secret Hitler</h1>
       <Container>
-        <span className="button" onClick={() => createGame()}>
+        <span className="button" onClick={() => handleCreateGameClick()}>
           Create Game
         </span>
-        <span className="button" onClick={() => joinGame()}>
+        <span className="button" onClick={() => handleJoinGameClick()}>
           Join Game
         </span>
       </Container>

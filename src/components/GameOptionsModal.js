@@ -7,10 +7,11 @@ import "../styles/modal.css";
 function GameOptionsModal(props) {
   const [open, setOpen] = useState(props.open);
   const isJoin = props.mode === "Join";
+  const isPrivate = props.selectedGame.gameType === 1;
   const [username, setUsername] = useState(
     props.user.first_name + " " + props.user.last_name
   );
-  const [lobbyCode, setLobbyCode] = useState("");
+  const [lobbyPassword, setLobbyPassword] = useState("");
   const [gameType, setGameType] = useState(0);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ function GameOptionsModal(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.onSubmit(username, lobbyCode, gameType);
+    props.onSubmit(username, lobbyPassword, gameType);
   };
 
   return (
@@ -66,14 +67,14 @@ function GameOptionsModal(props) {
               </Form.Control>
             </Form.Group>
           )}
-          {isJoin && (
+          {isPrivate && (
             <Form.Group>
-              <Form.Label>Lobby Id</Form.Label>
+              <Form.Label>Lobby Password</Form.Label>
               <Form.Control
                 required
-                type="text"
-                value={lobbyCode}
-                onChange={(e) => setLobbyCode(e.target.value)}
+                type="password"
+                value={lobbyPassword}
+                onChange={(e) => setLobbyPassword(e.target.value)}
               />
             </Form.Group>
           )}
