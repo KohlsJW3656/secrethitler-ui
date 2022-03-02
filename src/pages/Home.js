@@ -18,7 +18,7 @@ function Home({ history }) {
   useEffect(() => {
     if (socket == null) return;
     socket.on("login", () => history.push("/dashboard"));
-  }, [socket]);
+  }, [socket, history]);
 
   const onLogin = (event) => {
     event.preventDefault();

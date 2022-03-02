@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import SideBar from "../components/SideBar";
 
 import { useSelector } from "react-redux";
@@ -8,7 +8,6 @@ import LobbyComponent from "../components/LobbyComponent";
 
 function Lobby({ history }) {
   const authenticated = useSelector((state) => state.authenticated);
-  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!authenticated) {

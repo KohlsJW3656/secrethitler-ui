@@ -1,33 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { startGettingJoinableGames, startJoiningGame } from "../actions";
-import { BrowserRouter as Router, Link } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
-import Button from "react-bootstrap/Button";
 import Notification from "./Notification";
 import ErrorModal from "./ErrorModal";
-import GameOptionsModal from "./GameOptionsModal";
+import JoinGameModal from "./JoinGameModal";
+import CreateGameModal from "./CreateGameModal";
 import { Container } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
-import randomstring from "randomstring";
 import { startCreatingGame } from "../actions";
 
 function GameComponent(props) {
   const dispatch = useDispatch();
   const history = props.history;
-  const randomGameCode = randomstring;
   const jwt = useSelector((state) => state.jwt);
   const socket = useSelector((state) => state.socket);
   const user = useSelector((state) => state.user);
   const joinableGames = useSelector((state) => state.joinableGames);
   const [errorMessage, setErrorMessage] = useState("");
   const [displayErrorOpen, setDisplayErrorOpen] = useState(false);
-  const [gameOptionsOpen, setGameOptionsOpen] = useState(false);
-  const [gameOptionsMode, setGameOptionsMode] = useState();
+  const [joinGameOpen, setJoinGameOpen] = useState(false);
+  const [createGameOpen, setCreateGameOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState({ game_id: -1 });
   const joinableGamesColumns = [
     { dataField: "game_id", text: "Id", sort: true },
-    { dataField: "game_code", text: "Game Code" },
     {
       dataField: "private_game",
       text: "Game Type",
@@ -39,6 +35,12 @@ function GameComponent(props) {
       text: "Created Time",
       sort: true,
       formatter: (cell, row) => new Date(cell).toLocaleString(),
+    },
+    {
+      dataField: "rules",
+      text: "Rules",
+      isDummyField: true,
+      formatter: (cell, row) => <span></span>,
     },
   ];
 
@@ -60,38 +62,46 @@ function GameComponent(props) {
     setDisplayErrorOpen(false);
   };
 
-  const handleGameOptionsClose = () => {
-    setGameOptionsOpen(false);
+  const handleJoinGameClose = () => {
+    setJoinGameOpen(false);
   };
 
-  const handleGameOptions = (username, gameCode, gameType) => {
-    /* Creating game */
-    if (gameCode === "") {
-      gameCode = randomGameCode.generate(5);
-      dispatch(
-        startCreatingGame(gameCode, gameType, username, socket, history, jwt)
-      );
-    } else {
-      /* Joining game */
-      dispatch(
-        startJoiningGame(selectedGame.game_id, username, socket, history, jwt)
-      );
-    }
+  const handleCreateGameClose = () => {
+    setCreateGameOpen(false);
   };
 
-  const handleCreateGameClick = () => {
-    setGameOptionsMode("Create");
-    setGameOptionsOpen(true);
+  const handleJoinGame = (username, password) => {
+    dispatch(
+      startJoiningGame(
+        selectedGame.game_id,
+        username,
+        password,
+        socket,
+        history,
+        jwt
+      )
+    );
+    setJoinGameOpen(false);
+  };
+
+  const handleCreateGame = (username, gameType, password) => {
+    dispatch(
+      startCreatingGame(username, gameType, password, socket, history, jwt)
+    );
+    setCreateGameOpen(false);
   };
 
   const handleJoinGameClick = () => {
     if (selectedGame.game_id !== -1) {
-      setGameOptionsMode("Join");
-      setGameOptionsOpen(true);
+      setJoinGameOpen(true);
     } else {
       setErrorMessage("Please select a game to join.");
       setDisplayErrorOpen(true);
     }
+  };
+
+  const handleCreateGameClick = () => {
+    setCreateGameOpen(true);
   };
 
   return (
@@ -105,13 +115,20 @@ function GameComponent(props) {
         message={errorMessage}
       />
 
-      <GameOptionsModal
-        open={gameOptionsOpen}
+      <JoinGameModal
+        open={joinGameOpen}
         user={user}
         selectedGame={selectedGame}
-        onClose={handleGameOptionsClose}
-        onSubmit={handleGameOptions}
-        mode={gameOptionsMode}
+        onClose={handleJoinGameClose}
+        onSubmit={handleJoinGame}
+      />
+
+      <CreateGameModal
+        open={createGameOpen}
+        user={user}
+        selectedGame={selectedGame}
+        onClose={handleCreateGameClose}
+        onSubmit={handleCreateGame}
       />
       <h1 className="pageTitle">Secret Hitler</h1>
       <Container>

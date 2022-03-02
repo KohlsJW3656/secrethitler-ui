@@ -48,14 +48,14 @@ function checkForErrors(response) {
 
 /*********************************** Games ***********************************/
 export function startCreatingGame(
-  game_code,
-  private_game,
   username,
+  private_game,
+  password,
   socket,
   history,
   jwt
 ) {
-  const game = { game_code, private_game };
+  const game = { private_game, password };
   const options = {
     method: "POST",
     headers: {
@@ -80,7 +80,14 @@ export function startCreatingGame(
             })
           );
           dispatch(
-            startJoiningGame(game.game_id, username, socket, history, jwt)
+            startJoiningGame(
+              game.game_id,
+              username,
+              password,
+              socket,
+              history,
+              jwt
+            )
           );
         }
       })
@@ -103,8 +110,15 @@ export function FinishCreatingGame(game) {
   };
 }
 
-export function startJoiningGame(game_id, username, socket, history, jwt) {
-  const gameUser = { game_id, username };
+export function startJoiningGame(
+  game_id,
+  username,
+  password,
+  socket,
+  history,
+  jwt
+) {
+  const gameUser = { game_id, username, password };
   const options = {
     method: "POST",
     headers: {
@@ -137,7 +151,7 @@ export function startJoiningGame(game_id, username, socket, history, jwt) {
         dispatch(
           AddNotification({
             type: "danger",
-            message: "Warning! Failed to join game!!",
+            message: "Incorrect password, or the game is no longer joinable",
           })
         );
       });

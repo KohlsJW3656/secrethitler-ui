@@ -24,7 +24,7 @@ function SideBar(props) {
         </h3>
 
         <div className="center">
-          <img src="../images/players/1.png" />
+          <img src="../images/players/1.png" alt="Secret Identity" />
         </div>
 
         <div className="d-flex flex-column mt-2">

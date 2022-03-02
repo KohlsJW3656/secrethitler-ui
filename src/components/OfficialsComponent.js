@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Link, useHistory } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Policy } from "../components/Policy";
 import { startGettingAllPolicies, startEditingPolicy } from "../actions";
@@ -16,7 +16,7 @@ function OfficialsComponent() {
 
   useEffect(() => {
     dispatch(startGettingAllPolicies(jwt));
-  }, []);
+  }, [dispatch, jwt]);
 
   const setDiscarded = (policy) => {
     drawPolicies.filter(

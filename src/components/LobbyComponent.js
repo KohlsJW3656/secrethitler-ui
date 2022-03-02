@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { BrowserRouter as Router, Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 import "../styles/table.css";
-import Button from "react-bootstrap/Button";
 import Notification from "./Notification";
 import { AddNotification } from "../actions";
 import ErrorModal from "./ErrorModal";
@@ -14,11 +13,9 @@ import { Container } from "react-bootstrap";
 function LobbyComponent(props) {
   const dispatch = useDispatch();
   const game = useSelector((state) => state.game);
-  const gameUser = useSelector((state) => state.gameUser);
   const gameUsers = useSelector((state) => state.gameUsers);
   const gameHost = useSelector((state) => state.gameHost);
   const socket = useSelector((state) => state.socket);
-  const jwt = useSelector((state) => state.jwt);
   const [errorMessage, setErrorMessage] = useState("");
   const [displayErrorOpen, setDisplayErrorOpen] = useState(false);
   const [kickUserOpen, setKickUserOpen] = useState(false);
@@ -50,7 +47,7 @@ function LobbyComponent(props) {
       dispatch(AddNotification({ type: "danger", message: message }));
       props.history.push("/game");
     });
-  }, [socket]);
+  }, [socket, dispatch, props.history]);
 
   const handleDisplayErrorClose = () => {
     setDisplayErrorOpen(false);
@@ -101,7 +98,7 @@ function LobbyComponent(props) {
       />
       <h1 className="pageTitle">Secret Hitler</h1>
       <Container>
-        <p>Game Code: {game.game_code}</p>
+        <p>Game Id: {game.game_id}</p>
       </Container>
       <Container>
         <p>Connected Players: {gameUsers.length}</p>

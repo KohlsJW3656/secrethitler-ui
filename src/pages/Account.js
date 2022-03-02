@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import SideBar from "../components/SideBar";
 import Form from "react-bootstrap/Form";
 
-import { startEditingUser, AddNotification } from "../actions";
+import { startEditingUser } from "../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 

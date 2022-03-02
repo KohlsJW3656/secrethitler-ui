@@ -4,15 +4,13 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import "../styles/modal.css";
 
-function GameOptionsModal(props) {
+function JoinGameModal(props) {
   const [open, setOpen] = useState(props.open);
-  const isJoin = props.mode === "Join";
-  const isPrivate = props.selectedGame.gameType === 1;
   const [username, setUsername] = useState(
     props.user.first_name + " " + props.user.last_name
   );
   const [lobbyPassword, setLobbyPassword] = useState("");
-  const [gameType, setGameType] = useState(0);
+  const isPrivate = props.selectedGame.private_game;
 
   useEffect(() => {
     setOpen(props.open);
@@ -26,7 +24,7 @@ function GameOptionsModal(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.onSubmit(username, lobbyPassword, gameType);
+    props.onSubmit(username, lobbyPassword);
   };
 
   return (
@@ -38,9 +36,7 @@ function GameOptionsModal(props) {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="camera-modal">
-          {isJoin ? "Join Game" : "Create Game"}
-        </Modal.Title>
+        <Modal.Title id="camera-modal">Join Game</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
@@ -53,21 +49,7 @@ function GameOptionsModal(props) {
               onChange={(e) => setUsername(e.target.value)}
             />
           </Form.Group>
-          {!isJoin && (
-            <Form.Group>
-              <Form.Label>Game Type</Form.Label>
-              <Form.Control
-                required
-                as="select"
-                value={gameType}
-                onChange={(e) => setGameType(parseInt(e.target.value))}
-              >
-                <option value="0">Public</option>
-                <option value="1">Private</option>
-              </Form.Control>
-            </Form.Group>
-          )}
-          {isPrivate && (
+          {isPrivate === 1 && (
             <Form.Group>
               <Form.Label>Lobby Password</Form.Label>
               <Form.Control
@@ -90,13 +72,8 @@ function GameOptionsModal(props) {
               </Button>
             </span>
             <span className="float-right mr-2">
-              <Button
-                className="btn btn-info"
-                type="button"
-                variant="info"
-                onClick={handleSubmit}
-              >
-                {isJoin ? "Join Game" : "Create Game"}
+              <Button className="btn btn-info" type="submit" variant="info">
+                Join Game
               </Button>
             </span>
           </div>
@@ -106,4 +83,4 @@ function GameOptionsModal(props) {
   );
 }
 
-export default GameOptionsModal;
+export default JoinGameModal;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createBrowserHistory } from "history";
@@ -35,11 +35,7 @@ function App() {
 
   useEffect(() => {
     dispatch(setSocket());
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (socket == null) return;
@@ -50,7 +46,7 @@ function App() {
     socket.on("logout", (message) =>
       dispatch(startLoggingOutUser(socket, history, message))
     );
-  }, [socket]);
+  }, [socket, dispatch]);
 
   return (
     <Router history={history}>
