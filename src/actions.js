@@ -48,6 +48,7 @@ function checkForErrors(response) {
 
 /*********************************** Games ***********************************/
 export function startCreatingGame(
+  name,
   username,
   private_game,
   password,
@@ -55,7 +56,7 @@ export function startCreatingGame(
   history,
   jwt
 ) {
-  const game = { private_game, password };
+  const game = { name, private_game, password };
   const options = {
     method: "POST",
     headers: {
@@ -504,16 +505,8 @@ export function finishSettingUser(user) {
   };
 }
 
-export function startEditingUser(
-  user_id,
-  first_name,
-  last_name,
-  email,
-  password,
-  jwt
-) {
+export function startEditingUser(first_name, last_name, email, password, jwt) {
   const user = {
-    user_id,
     first_name,
     last_name,
     email,
@@ -534,7 +527,6 @@ export function startEditingUser(
       .then((response) => response.json())
       .then((data) => {
         if (data.ok) {
-          user.user_id = user_id;
           dispatch(FinishEditingUser(user));
           dispatch(
             AddNotification({

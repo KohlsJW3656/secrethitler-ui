@@ -28,6 +28,11 @@ function LobbyComponent(props) {
   const userColumns = [
     { dataField: "game_user_id", text: "Id" },
     { dataField: "username", text: "Username" },
+    {
+      dataField: "ready",
+      text: "Ready",
+      formatter: (cell, row) => (cell === 1 ? "Yes" : "No"),
+    },
   ];
 
   const userSelect = {
@@ -98,7 +103,7 @@ function LobbyComponent(props) {
       />
       <h1 className="pageTitle">Secret Hitler</h1>
       <Container>
-        <p>Game Id: {game.game_id}</p>
+        <p>Game Name: {game.name}</p>
       </Container>
       <Container>
         <p>Connected Players: {gameUsers.length}</p>

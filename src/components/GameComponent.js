@@ -24,6 +24,7 @@ function GameComponent(props) {
   const [selectedGame, setSelectedGame] = useState({ game_id: -1 });
   const joinableGamesColumns = [
     { dataField: "game_id", text: "Id", sort: true },
+    { dataField: "name", text: "Name", sort: true },
     {
       dataField: "private_game",
       text: "Game Type",
@@ -36,12 +37,12 @@ function GameComponent(props) {
       sort: true,
       formatter: (cell, row) => new Date(cell).toLocaleString(),
     },
-    {
-      dataField: "rules",
-      text: "Rules",
-      isDummyField: true,
-      formatter: (cell, row) => <span></span>,
-    },
+    // {
+    //   dataField: "rules",
+    //   text: "Rules",
+    //   isDummyField: true,
+    //   formatter: (cell, row) => <span></span>,
+    // },
   ];
 
   const gameSelect = {
@@ -84,9 +85,17 @@ function GameComponent(props) {
     setJoinGameOpen(false);
   };
 
-  const handleCreateGame = (username, gameType, password) => {
+  const handleCreateGame = (gameName, username, gameType, password) => {
     dispatch(
-      startCreatingGame(username, gameType, password, socket, history, jwt)
+      startCreatingGame(
+        gameName,
+        username,
+        gameType,
+        password,
+        socket,
+        history,
+        jwt
+      )
     );
     setCreateGameOpen(false);
   };

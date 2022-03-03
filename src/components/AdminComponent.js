@@ -108,7 +108,7 @@ function AdminComponent(props) {
   };
 
   return (
-    <div>
+    <div className="admin">
       <Notification></Notification>
       <h1 className="pageTitle">Secret Hitler</h1>
       <Container>

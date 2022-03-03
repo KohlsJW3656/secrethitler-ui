@@ -41,7 +41,7 @@ function JoinGameModal(props) {
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
           <Form.Group>
-            <Form.Label>Set Username</Form.Label>
+            <Form.Label>Username</Form.Label>
             <Form.Control
               required
               type="text"

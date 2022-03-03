@@ -3,16 +3,15 @@
   flex-direction: column;
   align-items: right; */
   justify-content: space-between;
-  background-color: #162e38ff;
   width: 85%;
 }
-
-.a1 {
-  margin-left: 50px;
-  color: white;
-  font-size: 30px;
-  font-weight: bolder;
+.admin {
+  width: 85%;
+  height: 100%;
+  padding-top: 10px;
+  padding-left: 50px;
 }
+
 .a2 {
   margin-top: 10px;
   color: white;
@@ -31,17 +30,97 @@
 }
 
 .textbar {
-  background-color: #162e38ff;
-  border-color: #162e38ff;
-  margin-left: 15px;
+  background-color: rgb(255, 255, 255);
+  border-color: rgba(22, 46, 56, 0);
+  margin-left: 95px;
   display: inline-block;
-  width: 350px;
-  height: 32px;
-  color: white;
+  width: 345px;
+  height: 35px;
   font-size: 25px;
   font-weight: bolder;
 }
 
+.textbar-a {
+  background-color: rgb(255, 255, 255);
+  border-color: rgba(22, 46, 56, 0);
+  margin-left: 90px;
+  display: inline-block;
+  width: 345px;
+  height: 35px;
+  font-size: 25px;
+  font-weight: bolder;
+}
+
+.textbar-b {
+  background-color: rgb(255, 255, 255);
+  border-color: rgba(22, 46, 56, 0);
+  margin-left: 90px;
+  display: inline-block;
+  width: 345px;
+  height: 35px;
+  font-size: 25px;
+  font-weight: bolder;
+}
+
+.textbar-c {
+  background-color: rgb(255, 255, 255);
+  border-color: rgba(22, 46, 56, 0);
+  margin-left: 44px;
+  display: inline-block;
+  width: 345px;
+  height: 35px;
+  font-size: 25px;
+  font-weight: bolder;
+}
+
+.textbar-d {
+  background-color: rgb(255, 255, 255);
+  border-color: rgba(22, 46, 56, 0);
+  margin-left: 15px;
+  display: inline-block;
+  width: 345px;
+  height: 35px;
+  font-size: 25px;
+  font-weight: bolder;
+}
+
+.textbar-e {
+  background-color: rgb(255, 255, 255);
+  border-color: rgba(22, 46, 56, 0);
+  margin-left: 133px;
+  display: inline-block;
+  width: 345px;
+  height: 35px;
+  font-size: 25px;
+  font-weight: bolder;
+}
+
+.textbar-f {
+  background-color: rgb(255, 255, 255);
+  border-color: rgba(22, 46, 56, 0);
+  margin-left: 62px;
+  display: inline-block;
+  width: 345px;
+  height: 35px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.textbar-g {
+  background-color: rgb(255, 255, 255);
+  border-color: rgba(22, 46, 56, 0);
+  margin-left: 25px;
+  display: inline-block;
+  width: 345px;
+  height: 35px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
 .form {
   font-size: 15px;
+}
+
+input::placeholder {
+  color: rgb(255, 0, 0);
 }

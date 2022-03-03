@@ -6,6 +6,7 @@ import "../styles/modal.css";
 
 function CreateGameModal(props) {
   const [open, setOpen] = useState(props.open);
+  const [gameName, setGameName] = useState("");
   const [username, setUsername] = useState(
     props.user.first_name + " " + props.user.last_name
   );
@@ -23,6 +24,7 @@ function CreateGameModal(props) {
 
   useEffect(() => {
     setOpen(props.open);
+    setGameName("");
     setUsername(props.user.first_name + " " + props.user.last_name);
     setGameType(0);
     setPassword1("");
@@ -36,7 +38,7 @@ function CreateGameModal(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.onSubmit(username, gameType, password2);
+    props.onSubmit(gameName, username, gameType, password2);
   };
 
   return (
@@ -53,7 +55,16 @@ function CreateGameModal(props) {
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
           <Form.Group>
-            <Form.Label>Set Username</Form.Label>
+            <Form.Label>Game Name</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              value={gameName}
+              onChange={(e) => setGameName(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Username</Form.Label>
             <Form.Control
               required
               type="text"
