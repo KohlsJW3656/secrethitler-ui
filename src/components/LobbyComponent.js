@@ -16,6 +16,7 @@ function LobbyComponent(props) {
   const gameUsers = useSelector((state) => state.gameUsers);
   const gameHost = useSelector((state) => state.gameHost);
   const socket = useSelector((state) => state.socket);
+  const gameUser = useSelector((state) => state.gameUser);
   const [errorMessage, setErrorMessage] = useState("");
   const [displayErrorOpen, setDisplayErrorOpen] = useState(false);
   const [kickUserOpen, setKickUserOpen] = useState(false);
@@ -75,14 +76,26 @@ function LobbyComponent(props) {
   };
 
   const handleKickUser = () => {
-    let gameUserId = selectedUser.game_user_id;
-    let gameId = game.game_id;
-    let userId = selectedUser.user_id;
-    let username = selectedUser.username;
-    socket.emit("kick-user", { gameUserId, gameId, userId, username });
+    socket.emit("kick-user", {
+      gameUserId: selectedUser.game_user_id,
+      gameId: game.game_id,
+      userId: selectedUser.user_id,
+      username: selectedUser.username,
+    });
     setSelectedUser({ game_user_id: -1, username: "No user selected" });
     setKickUserOpen(false);
   };
+
+  const handleReadyUp = () => {
+    socket.emit("user-ready", {
+      gameUserId: gameUser.game_user_id,
+      gameId: game.game_id,
+      username: gameUser.username,
+      ready: !gameUser.ready,
+    });
+  };
+
+  const handleStartGame = () => {};
 
   return (
     <div>
@@ -108,13 +121,21 @@ function LobbyComponent(props) {
       <Container>
         <p>Connected Players: {gameUsers.length}</p>
       </Container>
-      {gameHost && (
-        <Container>
-          <span className="button" onClick={() => handleKickUserClick()}>
-            Kick Player
-          </span>
-        </Container>
-      )}
+      <Container>
+        {gameHost && (
+          <>
+            <span className="button" onClick={() => handleStartGame()}>
+              Start Game
+            </span>
+            <span className="button" onClick={() => handleKickUserClick()}>
+              Kick Player
+            </span>
+          </>
+        )}
+        <span className="button" onClick={() => handleReadyUp()}>
+          Ready
+        </span>
+      </Container>
       <Container>
         <BootstrapTable
           bootstrap4
