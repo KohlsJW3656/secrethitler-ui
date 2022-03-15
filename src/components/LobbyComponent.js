@@ -17,6 +17,8 @@ function LobbyComponent(props) {
   const gameHost = useSelector((state) => state.gameHost);
   const socket = useSelector((state) => state.socket);
   const gameUser = useSelector((state) => state.gameUser);
+  const [readyToStart, setReadyToStart] = useState(false);
+  const [gameTimer, setGameTimer] = useState(-1);
   const [errorMessage, setErrorMessage] = useState("");
   const [displayErrorOpen, setDisplayErrorOpen] = useState(false);
   const [kickUserOpen, setKickUserOpen] = useState(false);
@@ -53,6 +55,14 @@ function LobbyComponent(props) {
       dispatch(AddNotification({ type: "danger", message: message }));
       props.history.push("/game");
     });
+    socket.on("ready-to-start", (value) => {
+      if (!value) {
+        setGameTimer(-1);
+      }
+      setReadyToStart(value);
+    });
+    socket.on("game-timer", (time) => setGameTimer(time));
+    socket.on("start-game", () => props.history.push("/secretidentity"));
   }, [socket, dispatch, props.history]);
 
   const handleDisplayErrorClose = () => {
@@ -95,7 +105,9 @@ function LobbyComponent(props) {
     });
   };
 
-  const handleStartGame = () => {};
+  const handleStartGame = () => {
+    socket.emit("initialize-start-game", { gameId: game.game_id });
+  };
 
   return (
     <div>
@@ -115,6 +127,11 @@ function LobbyComponent(props) {
         message={kickUserMessage}
       />
       <h1 className="pageTitle">Secret Hitler</h1>
+      {gameTimer > -1 && readyToStart && (
+        <Container>
+          <p>Game Starting in: {gameTimer}</p>
+        </Container>
+      )}
       <Container>
         <p>Game Name: {game.name}</p>
       </Container>
@@ -122,15 +139,15 @@ function LobbyComponent(props) {
         <p>Connected Players: {gameUsers.length}</p>
       </Container>
       <Container>
+        {gameHost && readyToStart && (
+          <span className="button" disabled onClick={() => handleStartGame()}>
+            Start Game
+          </span>
+        )}
         {gameHost && (
-          <>
-            <span className="button" onClick={() => handleStartGame()}>
-              Start Game
-            </span>
-            <span className="button" onClick={() => handleKickUserClick()}>
-              Kick Player
-            </span>
-          </>
+          <span className="button" onClick={() => handleKickUserClick()}>
+            Kick Player
+          </span>
         )}
         <span className="button" onClick={() => handleReadyUp()}>
           Ready
