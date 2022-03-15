@@ -13,10 +13,10 @@ import { Container } from "react-bootstrap";
 function LobbyComponent(props) {
   const dispatch = useDispatch();
   const game = useSelector((state) => state.game);
+  const gameUser = useSelector((state) => state.gameUser);
   const gameUsers = useSelector((state) => state.gameUsers);
   const gameHost = useSelector((state) => state.gameHost);
   const socket = useSelector((state) => state.socket);
-  const gameUser = useSelector((state) => state.gameUser);
   const [readyToStart, setReadyToStart] = useState(false);
   const [gameTimer, setGameTimer] = useState(-1);
   const [errorMessage, setErrorMessage] = useState("");
@@ -48,9 +48,9 @@ function LobbyComponent(props) {
     },
   };
 
-  /* Client is kicked, send to game selection */
   useEffect(() => {
     if (socket == null) return;
+    /* Client is kicked, send to game selection */
     socket.on("kicked", (message) => {
       dispatch(AddNotification({ type: "danger", message: message }));
       props.history.push("/game");
@@ -62,7 +62,7 @@ function LobbyComponent(props) {
       setReadyToStart(value);
     });
     socket.on("game-timer", (time) => setGameTimer(time));
-    socket.on("start-game", () => props.history.push("/secretidentity"));
+    socket.on("start-game", () => props.history.push("/revealrole"));
   }, [socket, dispatch, props.history]);
 
   const handleDisplayErrorClose = () => {

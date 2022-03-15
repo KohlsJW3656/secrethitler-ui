@@ -18,8 +18,9 @@ import {
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
-import Lobby from "./pages/Lobby";
 import Game from "./pages/Game";
+import Lobby from "./pages/Lobby";
+import RevealRole from "./pages/RevealRole";
 import Officials from "./pages/Officials";
 import Admin from "./pages/Admin";
 import Account from "./pages/Account";
@@ -42,7 +43,7 @@ function App() {
     socket.on("users-connected", (playerCount) =>
       dispatch(setPlayerCount(playerCount))
     );
-    socket.on("connectToRoom", (data) => dispatch(setGameUsers(data)));
+    socket.on("get-game-users", (data) => dispatch(setGameUsers(data)));
     socket.on("logout", (message) =>
       dispatch(startLoggingOutUser(socket, history, message))
     );
@@ -83,11 +84,14 @@ function App() {
           <Route path="/dashboard">
             <Dashboard />
           </Route>
+          <Route path="/game">
+            <Game />
+          </Route>
           <Route path="/lobby">
             <Lobby />
           </Route>
-          <Route path="/game">
-            <Game />
+          <Route path="/revealrole">
+            <RevealRole />
           </Route>
           <Route path="/officials">
             <Officials />

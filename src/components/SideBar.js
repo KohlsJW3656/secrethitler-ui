@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
+import SecretIdComponent from "./SecretIdComponent";
 
 import { startLoggingOutUser } from "../actions";
 
@@ -9,6 +10,7 @@ function SideBar(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const admin = useSelector((state) => state.admin);
+  const gameUser = useSelector((state) => state.gameUser);
   const socket = useSelector((state) => state.socket);
 
   const handleLogout = (event) => {
@@ -23,10 +25,11 @@ function SideBar(props) {
           {user.first_name} {user.last_name}
         </h3>
 
-        <div className="center">
-          <img src="../images/players/1.png" alt="Secret Identity" />
-        </div>
-
+        {Object.entries(gameUser).length !== 0 && gameUser.role_id !== 0 && (
+          <div className="center">
+            <SecretIdComponent roleId={gameUser.role_id}></SecretIdComponent>
+          </div>
+        )}
         <div className="d-flex flex-column mt-2">
           {admin && (
             <Link
