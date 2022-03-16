@@ -43,30 +43,29 @@ function RevealRoleComponent(props) {
           alt="Your secret identity"
         ></SecretIdComponent>
       </Container>
-      {(fascist && !hitler && gameUsers.length > 7) ||
-        (fascist && (
-          <>
-            <Container>
-              <h2>Teammate's Secret Identities</h2>
-            </Container>
-            <Container>
-              {gameUsers
-                .filter(
-                  (otherUser) =>
-                    otherUser.role_id !== gameUser.role_id &&
-                    otherUser.party_membership === 1
-                )
-                .map((otherUser) => (
-                  <SecretIdComponent
-                    key={otherUser.role_id}
-                    roleId={otherUser.role_id}
-                    username={otherUser.username}
-                    alt={otherUser.username + "'s secret identity"}
-                  ></SecretIdComponent>
-                ))}
-            </Container>
-          </>
-        ))}
+      {fascist && (!hitler || gameUsers.length < 7) && (
+        <>
+          <Container>
+            <h2>Teammate's Secret Identities</h2>
+          </Container>
+          <Container>
+            {gameUsers
+              .filter(
+                (otherUser) =>
+                  otherUser.role_id !== gameUser.role_id &&
+                  otherUser.party_membership === 1
+              )
+              .map((otherUser) => (
+                <SecretIdComponent
+                  key={otherUser.role_id}
+                  roleId={otherUser.role_id}
+                  username={otherUser.username}
+                  alt={otherUser.username + "'s secret identity"}
+                ></SecretIdComponent>
+              ))}
+          </Container>
+        </>
+      )}
     </div>
   );
 }

@@ -253,14 +253,14 @@ function reducer(state = initialState, action) {
           (gameUser) => !gameUser.party_membership
         ),
         gameHost: action.payload.result[0].user_id === state.user.user_id,
-        fascist: action.payload.result.filter(
-          (gameUser) =>
-            gameUser.user_id === state.user.user_id && gameUser.party_membership
-        )[0],
-        hitler: action.payload.result.filter(
-          (gameUser) =>
-            gameUser.user_id === state.user.user_id && gameUser.role_id === 1
-        )[0],
+        fascist:
+          action.payload.result.filter(
+            (gameUser) => gameUser.user_id === state.user.user_id
+          )[0].party_membership === 1,
+        hitler:
+          action.payload.result.filter(
+            (gameUser) => gameUser.user_id === state.user.user_id
+          )[0].role_id === 1,
       };
     default:
       return state;
