@@ -20,6 +20,10 @@ const initialState = {
   playerCount: 0,
   gameUsers: [],
   gameHost: false,
+  fascist: false,
+  hitler: false,
+  liberals: [],
+  fascists: [],
   game: {},
   gameUser: {},
   joinableGames: [],
@@ -242,7 +246,21 @@ function reducer(state = initialState, action) {
           (gameUser) => gameUser.user_id === state.user.user_id
         )[0],
         gameUsers: action.payload.result,
+        fascists: action.payload.result.filter(
+          (gameUser) => gameUser.party_membership
+        ),
+        liberals: action.payload.result.filter(
+          (gameUser) => !gameUser.party_membership
+        ),
         gameHost: action.payload.result[0].user_id === state.user.user_id,
+        fascist: action.payload.result.filter(
+          (gameUser) =>
+            gameUser.user_id === state.user.user_id && gameUser.party_membership
+        )[0],
+        hitler: action.payload.result.filter(
+          (gameUser) =>
+            gameUser.user_id === state.user.user_id && gameUser.role_id === 1
+        )[0],
       };
     default:
       return state;

@@ -11,7 +11,7 @@ function RevealRole({ history }) {
 
   useEffect(() => {
     if (!authenticated) {
-      //history.push("/");
+      history.push("/");
     }
   });
 
