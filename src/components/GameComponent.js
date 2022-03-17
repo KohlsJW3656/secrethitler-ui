@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { startGettingJoinableGames, startJoiningGame } from "../actions";
+import {
+  startGettingJoinableGames,
+  startJoiningGame,
+  startCreatingGame,
+} from "../actions";
 import BootstrapTable from "react-bootstrap-table-next";
 import Notification from "./Notification";
 import ErrorModal from "./ErrorModal";
@@ -8,7 +12,8 @@ import JoinGameModal from "./JoinGameModal";
 import CreateGameModal from "./CreateGameModal";
 import { Container } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
-import { startCreatingGame } from "../actions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock, faLockOpen } from "@fortawesome/free-solid-svg-icons";
 
 function GameComponent(props) {
   const dispatch = useDispatch();
@@ -23,14 +28,18 @@ function GameComponent(props) {
   const [createGameOpen, setCreateGameOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState({ game_id: -1 });
   const joinableGamesColumns = [
-    { dataField: "game_id", text: "Id", sort: true },
-    { dataField: "name", text: "Name", sort: true },
     {
       dataField: "private_game",
-      text: "Game Type",
       sort: true,
-      formatter: (cell, row) => (cell === 1 ? "Private" : "Public"),
+      formatter: (cell, row) =>
+        cell === 1 ? (
+          <FontAwesomeIcon icon={faLock} className="icon" />
+        ) : (
+          <FontAwesomeIcon icon={faLockOpen} className="icon" />
+        ),
     },
+    { dataField: "name", text: "Name", sort: true },
+    { dataField: "COUNT(game_user.game_id)", text: "Players", sort: true },
     {
       dataField: "created_time",
       text: "Created Time",

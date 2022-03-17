@@ -9,6 +9,8 @@ import { AddNotification } from "../actions";
 import ErrorModal from "./ErrorModal";
 import ConfirmModal from "./ConfirmModal";
 import { Container } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCrown, faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 function LobbyComponent(props) {
   const dispatch = useDispatch();
@@ -29,12 +31,25 @@ function LobbyComponent(props) {
   const [kickUserMessage, setKickUserMessage] = useState("");
 
   const userColumns = [
-    { dataField: "game_user_id", text: "Id" },
+    {
+      dataField: "game_user_id",
+      formatter: (cell, row) =>
+        gameUsers[0].game_user_id === cell ? (
+          <FontAwesomeIcon icon={faCrown} className="icon" />
+        ) : (
+          <></>
+        ),
+    },
     { dataField: "username", text: "Username" },
     {
       dataField: "ready",
       text: "Ready",
-      formatter: (cell, row) => (cell === 1 ? "Yes" : "No"),
+      formatter: (cell, row) =>
+        cell === 1 ? (
+          <FontAwesomeIcon icon={faCheck} className="icon" />
+        ) : (
+          <FontAwesomeIcon icon={faXmark} className="icon" />
+        ),
     },
   ];
 
@@ -150,13 +165,13 @@ function LobbyComponent(props) {
           </span>
         )}
         <span className="button" onClick={() => handleReadyUp()}>
-          Ready
+          {gameUser.ready ? "Not Ready" : "Ready"}
         </span>
       </Container>
       <Container>
         <BootstrapTable
           bootstrap4
-          keyField="username"
+          keyField="game_user_id"
           data={gameUsers}
           columns={userColumns}
           noDataIndication="No users connected"
