@@ -27,6 +27,7 @@ import Account from "./pages/Account";
 import Forgotpassword from "./pages/Forgotpassword";
 import Resetpassword from "./pages/Resetpassword";
 import EmailConfirmation from "./pages/EmailConfirmation";
+import SHComponent from "./components/SHComponent";
 
 const history = createBrowserHistory();
 
@@ -92,6 +93,9 @@ function App() {
           </Route>
           <Route path="/revealrole">
             <RevealRole />
+          </Route>
+          <Route path="/board">
+            <SHComponent />
           </Route>
           <Route path="/officials">
             <Officials />

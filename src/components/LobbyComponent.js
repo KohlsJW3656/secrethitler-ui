@@ -77,7 +77,7 @@ function LobbyComponent(props) {
       setReadyToStart(value);
     });
     socket.on("game-timer", (time) => setGameTimer(time));
-    socket.on("start-game", () => props.history.push("/revealrole"));
+    socket.on("reveal-role", () => props.history.push("/revealrole"));
   }, [socket, dispatch, props.history]);
 
   const handleDisplayErrorClose = () => {

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -14,14 +14,22 @@ function RevealRoleComponent(props) {
   const fascist = useSelector((state) => state.fascist);
   const hitler = useSelector((state) => state.hitler);
   const socket = useSelector((state) => state.socket);
+  const [gameTimer, setGameTimer] = useState(-1);
 
   useEffect(() => {
     if (socket == null) return;
+    socket.on("game-timer", (time) => setGameTimer(time));
+    socket.on("start-game", () => props.history.push("/board"));
   }, [socket, dispatch, props.history]);
 
   return (
     <div>
       <h1 className="pageTitle">Secret Hitler</h1>
+      {gameTimer > -1 && (
+        <Container>
+          <p>Game Starting in: {gameTimer}</p>
+        </Container>
+      )}
       <Container>
         <p>Game Name: {game.name}</p>
       </Container>
