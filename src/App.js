@@ -27,7 +27,7 @@ import Account from "./pages/Account";
 import Forgotpassword from "./pages/Forgotpassword";
 import Resetpassword from "./pages/Resetpassword";
 import EmailConfirmation from "./pages/EmailConfirmation";
-import SHComponent from "./components/SHComponent";
+import GameSelection from "./pages/GameSelection";
 
 const history = createBrowserHistory();
 
@@ -86,7 +86,7 @@ function App() {
             <Dashboard />
           </Route>
           <Route path="/game">
-            <Game />
+            <GameSelection />
           </Route>
           <Route path="/lobby">
             <Lobby />
@@ -95,7 +95,7 @@ function App() {
             <RevealRole />
           </Route>
           <Route path="/board">
-            <SHComponent />
+            <Game />
           </Route>
           <Route path="/officials">
             <Officials />

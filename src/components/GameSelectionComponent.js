@@ -15,7 +15,7 @@ import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faLockOpen } from "@fortawesome/free-solid-svg-icons";
 
-function GameComponent(props) {
+function GameSelectionComponent(props) {
   const dispatch = useDispatch();
   const history = props.history;
   const jwt = useSelector((state) => state.jwt);
@@ -172,4 +172,4 @@ function GameComponent(props) {
   );
 }
 
-export default withRouter(GameComponent);
+export default withRouter(GameSelectionComponent);

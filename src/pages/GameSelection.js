@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import SideBar from "../components/SideBar";
-import SHComponent from "../components/SHComponent";
 
 import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Container from "react-bootstrap/Container";
+import GameComponent from "../components/GameSelectionComponent";
 
-function Game({ history }) {
+function GameSelection({ history }) {
   const authenticated = useSelector((state) => state.authenticated);
 
   useEffect(() => {
@@ -19,10 +19,10 @@ function Game({ history }) {
     <>
       <SideBar history={history} active="game" />
       <Container>
-        <SHComponent history={history} />
+        <GameComponent history={history} />
       </Container>
     </>
   );
 }
 
-export default withRouter(Game);
+export default withRouter(GameSelection);
