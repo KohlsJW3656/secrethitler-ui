@@ -3,17 +3,21 @@ import "../styles/policy.css";
 
 export function Policy(props) {
   const policy = props.policy;
-  const drawPolicies = props.drawPolicies;
+  const gamePolicies = props.gamePolicies;
   let path =
-    policy.type === "Liberal"
+    policy.fascist === 0
       ? "../images/liberalpolicy.png"
       : "../images/fascistpolicy.png";
 
   return (
     <>
       <div className="buttonContainer">
-        <img className="policy" src={path} alt={policy.type + " policy"} />
-        {drawPolicies.length === 2 ? (
+        <img
+          className="policy"
+          src={path}
+          alt={policy.fascist === 0 ? "Liberal policy" : +"Fascist policy"}
+        />
+        {gamePolicies.length === 2 ? (
           <button
             className="actionButton button"
             onClick={() => props.setEnacted(policy)}

@@ -12,6 +12,7 @@ import {
   setSocket,
   setPlayerCount,
   setGameUsers,
+  setGamePolicies,
   startLoggingOutUser,
 } from "./actions";
 
@@ -45,6 +46,7 @@ function App() {
       dispatch(setPlayerCount(playerCount))
     );
     socket.on("get-game-users", (data) => dispatch(setGameUsers(data)));
+    socket.on("get-game-policies", (data) => dispatch(setGamePolicies(data)));
     socket.on("logout", (message) =>
       dispatch(startLoggingOutUser(socket, history, message))
     );

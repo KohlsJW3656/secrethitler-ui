@@ -10,15 +10,10 @@ const initialState = {
   admin: false,
   notification: {},
   users: [],
-  allPolicies: [],
-  drawPolicies: [],
-  deckPolicies: [],
-  discardedPolicies: [],
-  enactedPolicies: [],
-  notEnactedPolicies: [],
   topPolicy: {},
   playerCount: 0,
   gameUsers: [],
+  gamePolicies: [],
   gameHost: false,
   fascist: false,
   hitler: false,
@@ -51,114 +46,6 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         joinableGames: action.payload,
-      };
-    /**** Policies  ****/
-    case Action.FinishLoadingAllPolicies:
-      return {
-        ...state,
-        allPolicies: action.payload,
-        drawPolicies: action.payload.filter(
-          (policy) =>
-            policy.deckOrder < 3 &&
-            policy.isDiscarded === 0 &&
-            policy.isEnacted === 0
-        ),
-        deckPolicies: action.payload.filter(
-          (policy) => policy.isDiscarded === 0 && policy.isEnacted === 0
-        ),
-        discardedPolicies: action.payload.filter(
-          (policy) => policy.isDiscarded === 1 && policy.isEnacted === 0
-        ),
-        enactedPolicies: action.payload.filter(
-          (policy) => policy.isEnacted === 1
-        ),
-        notEnactedPolicies: action.payload.filter(
-          (policy) => policy.isEnacted === 0
-        ),
-        topPolicy: action.payload.filter(
-          (policy) =>
-            policy.deckOrder === 0 &&
-            policy.isDiscarded === 0 &&
-            policy.isEnacted === 0
-        )[0],
-      };
-    case Action.FinishLoadingDrawPolicies:
-      return {
-        ...state,
-        drawPolicies: action.payload,
-      };
-    case Action.FinishLoadingDeckPolicies:
-      return {
-        ...state,
-        deckPolicies: action.payload,
-      };
-    case Action.FinishLoadingDiscardedPolicies:
-      return {
-        ...state,
-        discardedPolicies: action.payload,
-      };
-    case Action.FinishLoadingEnactedPolicies:
-      return {
-        ...state,
-        enactedPolicies: action.payload,
-      };
-    case Action.FinishLoadingNotEnactedPolicies:
-      return {
-        ...state,
-        notEnactedPolicies: action.payload,
-      };
-    case Action.FinishLoadingTopPolicy:
-      return {
-        ...state,
-        topPolicy: action.payload,
-      };
-    case Action.FinishEditingPolicy:
-      return {
-        ...state,
-        allPolicies: state.allPolicies.map((policy) => {
-          if (policy.policy_id === action.policy_id) {
-            return action.payload;
-          } else {
-            return policy;
-          }
-        }),
-        drawPolicies: state.drawPolicies.map((policy) => {
-          if (policy.policy_id === action.policy_id) {
-            return action.payload;
-          } else {
-            return policy;
-          }
-        }),
-        deckPolicies: state.deckPolicies.map((policy) => {
-          if (policy.policy_id === action.policy_id) {
-            return action.payload;
-          } else {
-            return policy;
-          }
-        }),
-        discardedPolicies: state.discardedPolicies.map((policy) => {
-          if (policy.policy_id === action.policy_id) {
-            return action.payload;
-          } else {
-            return policy;
-          }
-        }),
-        enactedPolicies: state.enactedPolicies.map((policy) => {
-          if (policy.policy_id === action.policy_id) {
-            return action.payload;
-          } else {
-            return policy;
-          }
-        }),
-        notEnactedPolicies: state.notEnactedPolicies.map((policy) => {
-          if (policy.policy_id === action.policy_id) {
-            return action.payload;
-          } else {
-            return policy;
-          }
-        }),
-        topPolicy:
-          state.topPolicy.policy_id === action.policy_id ? {} : state.topPolicy,
       };
     /**** User Login  ****/
     case Action.FinishLoggingInUser:
@@ -261,6 +148,11 @@ function reducer(state = initialState, action) {
           action.payload.result.filter(
             (gameUser) => gameUser.user_id === state.user.user_id
           )[0].role_id === 1,
+      };
+    case Action.SetGamePolicies:
+      return {
+        ...state,
+        gamePolicies: action.payload.gamePolicies,
       };
     default:
       return state;

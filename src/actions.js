@@ -35,6 +35,7 @@ export const Action = Object.freeze({
   SetSocket: "SetSocket",
   SetPlayerCount: "SetPlayerCount",
   SetGameUsers: "SetGameUsers",
+  SetGamePolicies: "SetGamePolicies",
 });
 
 export const host = "https://secrethitleronline.duckdns.org:8445";
@@ -192,240 +193,6 @@ export function FinishLoadingJoinableGames(joinableGames) {
   return {
     type: Action.FinishLoadingJoinableGames,
     payload: joinableGames,
-  };
-}
-
-/*********************************** Policies ***********************************/
-export function startGettingAllPolicies(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/all`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingAllPolicies(data.allPolicies));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingAllPolicies(allPolicies) {
-  return {
-    type: Action.FinishLoadingAllPolicies,
-    payload: allPolicies,
-  };
-}
-
-export function startGettingDrawPolicies(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/draw`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingDrawPolicies(data.drawPolicies));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingDrawPolicies(drawPolicies) {
-  return {
-    type: Action.FinishLoadingDrawPolicies,
-    payload: drawPolicies,
-  };
-}
-
-export function startGettingDeckPolicies(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/deck`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingDeckPolicies(data.deckPolicies));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingDeckPolicies(deckPolicies) {
-  return {
-    type: Action.FinishLoadingDeckPolicies,
-    payload: deckPolicies,
-  };
-}
-
-export function startGettingDiscardedPolicies(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/discarded`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingDiscardedPolicies(data.discardedPolicies));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingDiscardedPolicies(discardedPolicies) {
-  return {
-    type: Action.FinishLoadingDiscardedPolicies,
-    payload: discardedPolicies,
-  };
-}
-
-export function startGettingEnactedPolicies(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/enacted`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingEnactedPolicies(data.enactedPolicies));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingEnactedPolicies(enactedPolicies) {
-  return {
-    type: Action.FinishLoadingEnactedPolicies,
-    payload: enactedPolicies,
-  };
-}
-
-export function startGettingNotEnactedPolicies(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/notenacted`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingNotEnactedPolicies(data.notEnactedPolicies));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingNotEnactedPolicies(notEnactedPolicies) {
-  return {
-    type: Action.FinishLoadingNotEnactedPolicies,
-    payload: notEnactedPolicies,
-  };
-}
-
-export function startGettingTopPolicy(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/top`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingTopPolicy(data.topPolicy));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingTopPolicy(topPolicy) {
-  return {
-    type: Action.FinishLoadingTopPolicy,
-    payload: topPolicy,
-  };
-}
-
-export function startEditingPolicy(policy, jwt) {
-  const options = {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(policy),
-  };
-
-  return (dispatch) => {
-    fetch(`${host}/policy/edit`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishEditingPolicy(policy));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishEditingPolicy(policy) {
-  return {
-    type: Action.FinishEditingPolicy,
-    payload: policy,
   };
 }
 
@@ -841,6 +608,13 @@ export function setPlayerCount(playerCount) {
 export function setGameUsers(data) {
   return {
     type: Action.SetGameUsers,
+    payload: data,
+  };
+}
+
+export function setGamePolicies(data) {
+  return {
+    type: Action.SetGamePolicies,
     payload: data,
   };
 }

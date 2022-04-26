@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Board } from "./Board";
-import { startGettingAllPolicies, startEditingPolicy } from "../actions";
 import { withRouter } from "react-router-dom";
 
 import "../styles/sh.css";
@@ -10,29 +9,21 @@ import { Container } from "react-bootstrap";
 
 function SHComponent() {
   const dispatch = useDispatch();
-  const jwt = useSelector((state) => state.jwt);
   const playerCount = useSelector((state) => state.playerCount);
-  const allPolicies = useSelector((state) => state.allPolicies);
-  const drawPolicies = useSelector((state) => state.drawPolicies);
-  const deckPolicies = useSelector((state) => state.deckPolicies);
-  const discardedPolicies = useSelector((state) => state.discardedPolicies);
-  const enactedPolicies = useSelector((state) => state.enactedPolicies);
-  const notEnactedPolicies = useSelector((state) => state.notEnactedPolicies);
-  const topPolicy = useSelector((state) => state.topPolicy);
+  const gamePolicies = useSelector((state) => state.gamePolicies);
 
-  useEffect(() => {
-    dispatch(startGettingAllPolicies(jwt));
-  }, []);
+  useEffect(() => {}, []);
 
   const enactTop = () => {
-    topPolicy.isEnacted = 1;
+    /*topPolicy.isEnacted = 1;
     dispatch(startEditingPolicy(topPolicy, jwt));
     resetDeckOrder(
       deckPolicies.filter((policy) => policy.policy_id !== topPolicy.policy_id)
-    );
+    );*/
   };
 
   const randomizeDeck = (array) => {
+    /*
     let currentIndex = array.length,
       temporaryValue,
       randomIndex;
@@ -46,31 +37,38 @@ function SHComponent() {
       array[randomIndex] = temporaryValue;
     }
     resetDeckOrder(array);
+    */
   };
 
   const shuffleDeck = () => {
+    /*
     for (let i = 0; i < notEnactedPolicies.length; i++) {
       notEnactedPolicies[i].isDiscarded = 0;
       dispatch(startEditingPolicy(notEnactedPolicies[i], jwt));
     }
     setTimeout(() => randomizeDeck(notEnactedPolicies), 500);
+    */
   };
 
   const resetGame = () => {
+    /*
     for (let i = 0; i < allPolicies.length; i++) {
       allPolicies[i].isDiscarded = 0;
       allPolicies[i].isEnacted = 0;
       dispatch(startEditingPolicy(allPolicies[i], jwt));
     }
     setTimeout(() => randomizeDeck(allPolicies), 500);
+    */
   };
 
   const resetDeckOrder = (array) => {
+    /*
     for (let i = 0; i < array.length; i++) {
       array[i].deckOrder = i;
       dispatch(startEditingPolicy(array[i], jwt));
     }
     dispatch(startGettingAllPolicies(jwt));
+    */
   };
 
   return (
@@ -81,8 +79,8 @@ function SHComponent() {
       </Container>
 
       <Container>
-        <p>Deck: {deckPolicies.length}</p>
-        <p>Discarded: {discardedPolicies.length}</p>
+        <p>Policies: {gamePolicies.length}</p>
+        {/* <p>Discarded: {discardedPolicies.length}</p> */}
       </Container>
       <Container>
         <Link className="button" to="/officials">
@@ -102,14 +100,16 @@ function SHComponent() {
         <Board
           type="Liberal"
           enactedCount={
-            enactedPolicies.filter((card) => card.type === "Liberal").length
+            // enactedPolicies.filter((card) => card.type === "Liberal").length
+            0
           }
           playerCount={playerCount}
         />
         <Board
           type="Fascist"
           enactedCount={
-            enactedPolicies.filter((card) => card.type === "Fascist").length
+            // enactedPolicies.filter((card) => card.type === "Fascist").length
+            0
           }
           playerCount={playerCount}
         />
