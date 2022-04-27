@@ -1,0 +1,10 @@
+#gameUserContainer {
+  width: 80vw;
+  border: 1px solid #000;
+  position: relative;
+}
+
+.gameUser {
+  width: 100px;
+  position: absolute;
+}

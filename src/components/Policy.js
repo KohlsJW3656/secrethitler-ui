@@ -4,10 +4,9 @@ import "../styles/policy.css";
 export function Policy(props) {
   const policy = props.policy;
   const gamePolicies = props.gamePolicies;
-  let path =
-    policy.fascist === 0
-      ? "../images/liberalpolicy.png"
-      : "../images/fascistpolicy.png";
+  let path = policy.fascist
+    ? "../images/fascistpolicy.png"
+    : "../images/liberalpolicy.png";
 
   return (
     <>
@@ -15,7 +14,7 @@ export function Policy(props) {
         <img
           className="policy"
           src={path}
-          alt={policy.fascist === 0 ? "Liberal policy" : +"Fascist policy"}
+          alt={policy.fascist ? "Fascist policy" : +"Liberal policy"}
         />
         {gamePolicies.length === 2 ? (
           <button

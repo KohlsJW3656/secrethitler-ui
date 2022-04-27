@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Board } from "./Board";
+
 import { withRouter } from "react-router-dom";
 
 import "../styles/sh.css";
 import { Container } from "react-bootstrap";
+import TableComponent from "./TableComponent";
 
 function SHComponent() {
   const dispatch = useDispatch();
   const playerCount = useSelector((state) => state.playerCount);
+  const gameUsers = useSelector((state) => state.gameUsers);
+  const gameUser = useSelector((state) => state.gameUser);
   const gamePolicies = useSelector((state) => state.gamePolicies);
 
-  useEffect(() => {}, []);
+  useEffect(() => {});
 
   const enactTop = () => {
     /*topPolicy.isEnacted = 1;
@@ -71,6 +74,30 @@ function SHComponent() {
     */
   };
 
+  const distributeFields = () => {
+    let radius = 400;
+    let fields = document.getElementsByClassName("gameUser"),
+      container = document.getElementById("gameUserContainer"),
+      width = container.offsetWidth,
+      height = container.offsetHeight,
+      angle = 0,
+      step = (2 * Math.PI) / fields.length;
+    for (let i = 0; i < fields.length; i++) {
+      let x = Math.round(
+        width / 2 + radius * Math.cos(angle) - fields[i].offsetWidth / 2
+      );
+      let y = Math.round(
+        height / 2 + radius * Math.sin(angle) - fields[i].offsetHeight / 2
+      );
+      if (window.console) {
+        console.log(fields[i].innerHTML, x, y);
+      }
+      fields[i].style.left = x + "px";
+      fields[i].style.top = y + "px";
+      angle += step;
+    }
+  };
+
   return (
     <div>
       <h1 className="pageTitle">Secret Hitler</h1>
@@ -86,34 +113,14 @@ function SHComponent() {
         <Link className="button" to="/officials">
           Draw Policies
         </Link>
-        <span className="button" onClick={() => shuffleDeck()}>
-          Shuffle Deck
-        </span>
-        <span className="button" onClick={() => enactTop()}>
-          Enact Top Policy
-        </span>
-        <span className="button" onClick={() => resetGame()}>
-          Reset Game
-        </span>
       </Container>
-      <Container>
-        <Board
-          type="Liberal"
-          enactedCount={
-            // enactedPolicies.filter((card) => card.type === "Liberal").length
-            0
-          }
-          playerCount={playerCount}
-        />
-        <Board
-          type="Fascist"
-          enactedCount={
-            // enactedPolicies.filter((card) => card.type === "Fascist").length
-            0
-          }
-          playerCount={playerCount}
-        />
-      </Container>
+
+      <TableComponent
+        gameUsers={gameUsers}
+        currentUser={gameUser}
+        playerCount={playerCount}
+        gamePolicies={gamePolicies}
+      ></TableComponent>
     </div>
   );
 }
