@@ -7,6 +7,7 @@ import Notification from "../components/Notification";
 import { startResettingPassword } from "../actions";
 
 import "../styles/home.css";
+import FooterComponent from "../components/FooterComponent";
 
 function Resetpassword({ history }) {
   const dispatch = useDispatch();
@@ -64,6 +65,7 @@ function Resetpassword({ history }) {
           </div>
         </Form>
       </div>
+      <FooterComponent />
     </>
   );
 }

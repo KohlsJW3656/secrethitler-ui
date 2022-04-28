@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Link, withRouter } from "react-router-dom";
+import FooterComponent from "../components/FooterComponent";
 import Notification from "../components/Notification";
 
 import "../styles/home.css";
@@ -17,6 +18,7 @@ function EmailConfirmation() {
           </Link>
         </p>
       </div>
+      <FooterComponent />
     </>
   );
 }

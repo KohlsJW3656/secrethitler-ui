@@ -7,6 +7,7 @@ import { startLoggingInUser } from "../actions";
 import Notification from "../components/Notification";
 
 import "../styles/home.css";
+import FooterComponent from "../components/FooterComponent";
 
 function Home({ history }) {
   const dispatch = useDispatch();
@@ -75,6 +76,7 @@ function Home({ history }) {
           </div>
         </Form>
       </div>
+      <FooterComponent />
     </>
   );
 }

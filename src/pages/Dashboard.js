@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import DashboardComponent from "../components/DashboardComponent";
+import FooterComponent from "../components/FooterComponent";
 
 function Dashboard({ history }) {
   const authenticated = useSelector((state) => state.authenticated);
@@ -20,6 +21,7 @@ function Dashboard({ history }) {
       <SideBar history={history} active="dashboard" />
       <Container>
         <DashboardComponent history={history} />
+        <FooterComponent />
       </Container>
     </>
   );

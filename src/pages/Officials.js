@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import OfficialsComponent from "../components/OfficialsComponent";
+import FooterComponent from "../components/FooterComponent";
 
 function Officials({ history }) {
   const authenticated = useSelector((state) => state.authenticated);
@@ -20,6 +21,7 @@ function Officials({ history }) {
       <SideBar history={history} active="" />
       <Container>
         <OfficialsComponent history={history} />
+        <FooterComponent />
       </Container>
     </>
   );

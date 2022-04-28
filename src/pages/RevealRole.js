@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import RevealRoleComponent from "../components/RevealRoleComponent";
+import FooterComponent from "../components/FooterComponent";
 
 function RevealRole({ history }) {
   const authenticated = useSelector((state) => state.authenticated);
@@ -20,6 +21,7 @@ function RevealRole({ history }) {
       <SideBar history={history} active="game" />
       <Container>
         <RevealRoleComponent history={history} />
+        <FooterComponent />
       </Container>
     </>
   );

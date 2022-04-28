@@ -9,6 +9,7 @@ import Button from "react-bootstrap/Button";
 import Notification from "../components/Notification";
 
 import "../styles/home.css";
+import FooterComponent from "../components/FooterComponent";
 
 function Signup({ history }) {
   const dispatch = useDispatch();
@@ -122,6 +123,7 @@ function Signup({ history }) {
           </div>
         </Form>
       </div>
+      <FooterComponent />
     </>
   );
 }

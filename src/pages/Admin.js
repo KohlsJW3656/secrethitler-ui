@@ -5,6 +5,7 @@ import Container from "react-bootstrap/Container";
 
 import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
+import FooterComponent from "../components/FooterComponent";
 
 function Admin({ history }) {
   const authenticated = useSelector((state) => state.authenticated);
@@ -20,6 +21,7 @@ function Admin({ history }) {
       <SideBar history={history} active="admin" />
       <Container>
         <AdminComponent history={history} />
+        <FooterComponent />
       </Container>
     </>
   );

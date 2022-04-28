@@ -5,6 +5,7 @@ import SHComponent from "../components/SHComponent";
 import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Container from "react-bootstrap/Container";
+import FooterComponent from "../components/FooterComponent";
 
 function Game({ history }) {
   const authenticated = useSelector((state) => state.authenticated);
@@ -20,6 +21,7 @@ function Game({ history }) {
       <SideBar history={history} active="game" />
       <Container>
         <SHComponent history={history} />
+        <FooterComponent />
       </Container>
     </>
   );
