@@ -2,7 +2,6 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import "../styles/dashboard.css";
 import { Container } from "react-bootstrap";
 
 function DashboardComponent() {
@@ -21,6 +20,7 @@ function DashboardComponent() {
             <a
               href="//encyclopedia.ushmm.org/content/en/question/how-did-the-united-states-government-and-american-people-respond-to-nazism"
               target="_blank"
+              rel="noreferrer"
             >
               https://encyclopedia.ushmm.org/content/en/question/how-did-the-united-states-government-and-american-people-respond-to-nazism
             </a>

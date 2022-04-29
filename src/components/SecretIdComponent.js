@@ -5,8 +5,8 @@ function SecretIdComponent(props) {
   const roleId = props.roleId;
   const alt = props.alt;
   return (
-    <div className="secretIdentity">
-      <img src={"../images/players/" + roleId + ".png"} alt={alt} />
+    <div className="secretIdentity center">
+      <img src={"../images/roles/" + roleId + ".png"} alt={alt} />
       <p>{props.username}</p>
     </div>
   );

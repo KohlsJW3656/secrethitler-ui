@@ -6,6 +6,7 @@ import SecretIdComponent from "./SecretIdComponent";
 
 function RevealRoleComponent(props) {
   const dispatch = useDispatch();
+  const socket = useSelector((state) => state.socket);
   const game = useSelector((state) => state.game);
   const gameUser = useSelector((state) => state.gameUser);
   const gameUsers = useSelector((state) => state.gameUsers);
@@ -13,7 +14,6 @@ function RevealRoleComponent(props) {
   const liberals = useSelector((state) => state.liberals);
   const fascist = useSelector((state) => state.fascist);
   const hitler = useSelector((state) => state.hitler);
-  const socket = useSelector((state) => state.socket);
   const [gameTimer, setGameTimer] = useState(-1);
 
   useEffect(() => {

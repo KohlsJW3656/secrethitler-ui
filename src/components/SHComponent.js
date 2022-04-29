@@ -1,127 +1,200 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-
 import { withRouter } from "react-router-dom";
 
-import "../styles/sh.css";
-import { Container } from "react-bootstrap";
-import TableComponent from "./TableComponent";
+import TableTopComponent from "./TableTopComponent";
+import ErrorModal from "./ErrorModal";
+import ChooseChancellorModal from "./ChooseChancellorModal";
+import CastBallotModal from "./CastBallotModal";
+import ChoosePolicyModal from "./ChoosePolicyModal";
 
-function SHComponent() {
+function SHComponent(props) {
   const dispatch = useDispatch();
+  const socket = useSelector((state) => state.socket);
+  const game = useSelector((state) => state.game);
   const playerCount = useSelector((state) => state.playerCount);
   const gameUsers = useSelector((state) => state.gameUsers);
   const gameUser = useSelector((state) => state.gameUser);
-  const gamePolicies = useSelector((state) => state.gamePolicies);
+  const drawPolicies = useSelector((state) => state.drawPolicies);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [displayErrorOpen, setDisplayErrorOpen] = useState(false);
+  const [chooseChancellorOpen, setChooseChancellorOpen] = useState(false);
+  const [castBallotOpen, setCastBallotOpen] = useState(false);
+  const [choosePolicyOpen, setChoosePolicyOpen] = useState(false);
 
-  useEffect(() => {});
-
-  const enactTop = () => {
-    /*topPolicy.isEnacted = 1;
-    dispatch(startEditingPolicy(topPolicy, jwt));
-    resetDeckOrder(
-      deckPolicies.filter((policy) => policy.policy_id !== topPolicy.policy_id)
-    );*/
-  };
-
-  const randomizeDeck = (array) => {
-    /*
-    let currentIndex = array.length,
-      temporaryValue,
-      randomIndex;
-
-    while (0 !== currentIndex) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-    resetDeckOrder(array);
-    */
-  };
-
-  const shuffleDeck = () => {
-    /*
-    for (let i = 0; i < notEnactedPolicies.length; i++) {
-      notEnactedPolicies[i].isDiscarded = 0;
-      dispatch(startEditingPolicy(notEnactedPolicies[i], jwt));
-    }
-    setTimeout(() => randomizeDeck(notEnactedPolicies), 500);
-    */
-  };
-
-  const resetGame = () => {
-    /*
-    for (let i = 0; i < allPolicies.length; i++) {
-      allPolicies[i].isDiscarded = 0;
-      allPolicies[i].isEnacted = 0;
-      dispatch(startEditingPolicy(allPolicies[i], jwt));
-    }
-    setTimeout(() => randomizeDeck(allPolicies), 500);
-    */
-  };
-
-  const resetDeckOrder = (array) => {
-    /*
-    for (let i = 0; i < array.length; i++) {
-      array[i].deckOrder = i;
-      dispatch(startEditingPolicy(array[i], jwt));
-    }
-    dispatch(startGettingAllPolicies(jwt));
-    */
-  };
-
-  const distributeFields = () => {
-    let radius = 400;
-    let fields = document.getElementsByClassName("gameUser"),
-      container = document.getElementById("gameUserContainer"),
-      width = container.offsetWidth,
-      height = container.offsetHeight,
-      angle = 0,
-      step = (2 * Math.PI) / fields.length;
-    for (let i = 0; i < fields.length; i++) {
-      let x = Math.round(
-        width / 2 + radius * Math.cos(angle) - fields[i].offsetWidth / 2
-      );
-      let y = Math.round(
-        height / 2 + radius * Math.sin(angle) - fields[i].offsetHeight / 2
-      );
-      if (window.console) {
-        console.log(fields[i].innerHTML, x, y);
+  useEffect(() => {
+    if (socket == null) return;
+    /* The President will begin choosing a chancellor */
+    socket.on("choose-chancellor", () => {
+      if (gameUser.president === 1) {
+        setChooseChancellorOpen(true);
+      } else {
+        setErrorMessage(
+          "The president is choosing a chancellor, please wait for them to finish."
+        );
+        setDisplayErrorOpen(true);
       }
-      fields[i].style.left = x + "px";
-      fields[i].style.top = y + "px";
-      angle += step;
+    });
+    /* Users will cast their ballots */
+    socket.on("initiate-ballot", () => {
+      handleDisplayErrorClose();
+      setCastBallotOpen(true);
+    });
+    /* The ballot failed */
+    socket.on("ballot-failed", (data) => {
+      handleDisplayErrorClose();
+      setErrorMessage(
+        "The ballot failed " + data.jas + " to " + data.neins + "!"
+      );
+      setDisplayErrorOpen(true);
+    });
+    /* The ballot passed */
+    socket.on("ballot-passed", (data) => {
+      handleDisplayErrorClose();
+      if (gameUser.president === 1) {
+        setErrorMessage(
+          "Congratulations President, the ballot passed " +
+            data.jas +
+            " to " +
+            data.neins +
+            "! You may now discard a policy."
+        );
+        setDisplayErrorOpen(true);
+        setChoosePolicyOpen(true);
+      } else if (gameUser.chancellor === 1) {
+        setErrorMessage(
+          "Congratulations Chancellor, the ballot passed " +
+            data.jas +
+            " to " +
+            data.neins +
+            "! Waiting for your president to discard a policy."
+        );
+        setDisplayErrorOpen(true);
+      } else {
+        setErrorMessage(
+          "The ballot passed  " +
+            data.jas +
+            " to " +
+            data.neins +
+            "! Waiting for your elected officials to pass a policy."
+        );
+        setDisplayErrorOpen(true);
+      }
+    });
+    socket.on("chancellor-policies", (data) => {
+      if (gameUser.chancellor === 1) {
+        setChoosePolicyOpen(true);
+      }
+    });
+  }, [
+    socket,
+    dispatch,
+    gameUser.president,
+    gameUser.chancellor,
+    props.history,
+  ]);
+
+  const handleDisplayErrorClose = () => {
+    setDisplayErrorOpen(false);
+  };
+
+  const handleChooseChancellorClose = () => {
+    setErrorMessage("You must select a Chancellor!");
+    setDisplayErrorOpen(true);
+  };
+
+  const handleCastBallotClose = () => {
+    setErrorMessage("You must cast a ballot!");
+    setDisplayErrorOpen(true);
+  };
+
+  const handleChoosePolicyClose = () => {
+    setErrorMessage("You must choose a policy!");
+    setDisplayErrorOpen(true);
+  };
+
+  const handleChooseChancellor = (game_user_id) => {
+    setChooseChancellorOpen(false);
+    socket.emit("assign-chancellor", {
+      gameId: game.game_id,
+      game_user_id: game_user_id,
+      value: 1,
+    });
+  };
+
+  const handleCastBallot = (ballot) => {
+    setCastBallotOpen(false);
+    socket.emit("cast-ballot", {
+      gameId: game.game_id,
+      game_user_id: gameUser.game_user_id,
+      username: gameUser.username,
+      ballot: ballot,
+    });
+    setErrorMessage(
+      "Other players are still casting their ballots, please wait for them to finish."
+    );
+    setDisplayErrorOpen(true);
+  };
+
+  const handleChoosePolicy = (game_policy_id, isEnacted) => {
+    setChoosePolicyOpen(false);
+    if (isEnacted) {
+      socket.emit("enact-policy", {
+        gameId: game.game_id,
+        game_policy_id: game_policy_id,
+        value: 1,
+      });
+    } else {
+      socket.emit("discard-policy", {
+        gameId: game.game_id,
+        game_policy_id: game_policy_id,
+        value: 1,
+      });
     }
   };
 
   return (
-    <div>
+    <>
       <h1 className="pageTitle">Secret Hitler</h1>
-      <Container>
-        <p>Connected Players: {playerCount}</p>
-      </Container>
-
-      <Container>
-        <p>Policies: {gamePolicies.length}</p>
-        {/* <p>Discarded: {discardedPolicies.length}</p> */}
-      </Container>
-      <Container>
-        <Link className="button" to="/officials">
-          Draw Policies
-        </Link>
-      </Container>
-
-      <TableComponent
+      <ErrorModal
+        open={displayErrorOpen}
+        onClose={handleDisplayErrorClose}
+        onSubmit={handleDisplayErrorClose}
+        title="Warning!"
+        message={errorMessage}
+      />
+      <ChooseChancellorModal
+        open={chooseChancellorOpen}
+        onClose={handleChooseChancellorClose}
+        onSubmit={handleChooseChancellor}
         gameUsers={gameUsers}
         currentUser={gameUser}
         playerCount={playerCount}
-        gamePolicies={gamePolicies}
-      ></TableComponent>
-    </div>
+        title="Chancellor Selection"
+      />
+      <CastBallotModal
+        open={castBallotOpen}
+        onClose={handleCastBallotClose}
+        onSubmit={handleCastBallot}
+        gameUsers={gameUsers}
+        currentUser={gameUser}
+        playerCount={playerCount}
+        title="Cast your ballot"
+      />
+      <ChoosePolicyModal
+        open={choosePolicyOpen}
+        onClose={handleChoosePolicyClose}
+        onSubmit={handleChoosePolicy}
+        gameUsers={gameUsers}
+        gamePolicies={drawPolicies}
+        title="Select a policy"
+      />
+      <TableTopComponent
+        gameUsers={gameUsers}
+        currentUser={gameUser}
+        playerCount={playerCount}
+      />
+    </>
   );
 }
 

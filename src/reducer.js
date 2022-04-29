@@ -14,6 +14,10 @@ const initialState = {
   playerCount: 0,
   gameUsers: [],
   gamePolicies: [],
+  drawPolicies: [],
+  deckPolicies: [],
+  discardedPolicies: [],
+  enactedPolicies: [],
   gameHost: false,
   fascist: false,
   hitler: false,
@@ -153,6 +157,21 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         gamePolicies: action.payload.gamePolicies,
+        drawPolicies: action.payload.gamePolicies.filter(
+          (policy) =>
+            policy.deck_order <= 3 &&
+            policy.discarded === 0 &&
+            policy.enacted === 0
+        ),
+        deckPolicies: action.payload.gamePolicies.filter(
+          (policy) => policy.discarded === 0 && policy.enacted === 0
+        ),
+        discardedPolicies: action.payload.gamePolicies.filter(
+          (policy) => policy.discarded === 1 && policy.enacted === 0
+        ),
+        enactedPolicies: action.payload.gamePolicies.filter(
+          (policy) => policy.enacted === 1
+        ),
       };
     default:
       return state;

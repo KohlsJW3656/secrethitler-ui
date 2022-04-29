@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Policy } from "../components/Policy";
-import { startGettingAllPolicies, startEditingPolicy } from "../actions";
+import Policy from "./Policy";
 import { withRouter } from "react-router-dom";
 import { Container } from "react-bootstrap";
 

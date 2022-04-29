@@ -1,0 +1,22 @@
+.gameUser {
+  width: 100px;
+}
+
+.pile {
+  width: 150px;
+}
+
+.board {
+  width: 800px;
+  margin: 20px;
+}
+
+.ballot {
+  width: 150px;
+  transition: transform 0.3s;
+}
+
+.ballot:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+}

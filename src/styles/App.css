@@ -3,11 +3,20 @@ html {
 }
 
 .App {
-  height: 100vh;
-  width: 100vw;
   display: flex;
   flex-direction: row;
   background-color: rgb(230, 100, 67);
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.pageTitle {
+  text-align: center;
 }
 
 .logoText {
@@ -57,7 +66,8 @@ hr {
   display: inline-block;
 }
 
-.button {
+.button,
+.buttonLib {
   text-decoration: none !important;
   text-align: center !important;
   padding: 5px !important;
@@ -70,12 +80,34 @@ hr {
   box-shadow: 0px 0px 2px 2px !important;
 }
 
+.buttonLib {
+  background-color: rgba(18, 78, 110) !important;
+  color: rgb(252, 253, 251) !important;
+}
+
 .button:hover {
   background-color: rgb(82, 0, 0) !important;
   cursor: pointer !important;
 }
 
+.buttonLib:hover {
+  background-color: rgb(10, 51, 73) !important;
+}
+
 .footer {
-  position: absolute;
+  position: fixed;
   bottom: 0;
+}
+
+.center {
+  text-align: center;
+}
+
+.verticalCenter {
+  align-items: center;
+  justify-content: center;
+}
+
+.noMargin {
+  margin: 0;
 }
