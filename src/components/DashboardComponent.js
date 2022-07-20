@@ -13,20 +13,6 @@ function DashboardComponent() {
       <Container>
         <p>Connected Players: {playerCount}</p>
       </Container>
-      <h3>Sources</h3>
-      <Container>
-        <ul>
-          <li>
-            <a
-              href="//encyclopedia.ushmm.org/content/en/question/how-did-the-united-states-government-and-american-people-respond-to-nazism"
-              target="_blank"
-              rel="noreferrer"
-            >
-              https://encyclopedia.ushmm.org/content/en/question/how-did-the-united-states-government-and-american-people-respond-to-nazism
-            </a>
-          </li>
-        </ul>
-      </Container>
     </div>
   );
 }
