@@ -12,7 +12,6 @@ function SHComponent(props) {
   const dispatch = useDispatch();
   const socket = useSelector((state) => state.socket);
   const game = useSelector((state) => state.game);
-  const playerCount = useSelector((state) => state.playerCount);
   const gameUsers = useSelector((state) => state.gameUsers);
   const gameUser = useSelector((state) => state.gameUser);
   const drawPolicies = useSelector((state) => state.drawPolicies);
@@ -26,14 +25,7 @@ function SHComponent(props) {
     if (socket == null) return;
     /* The President will begin choosing a chancellor */
     socket.on("choose-chancellor", () => {
-      if (gameUser.president === 1) {
-        setChooseChancellorOpen(true);
-      } else {
-        setErrorMessage(
-          "The president is choosing a chancellor, please wait for them to finish."
-        );
-        setDisplayErrorOpen(true);
-      }
+      setChooseChancellorOpen(true);
     });
     /* Users will cast their ballots */
     socket.on("initiate-ballot", () => {
@@ -51,40 +43,28 @@ function SHComponent(props) {
     /* The ballot passed */
     socket.on("ballot-passed", (data) => {
       handleDisplayErrorClose();
-      if (gameUser.president === 1) {
-        setErrorMessage(
-          "Congratulations President, the ballot passed " +
-            data.jas +
-            " to " +
-            data.neins +
-            "! You may now discard a policy."
-        );
-        setDisplayErrorOpen(true);
-        setChoosePolicyOpen(true);
-      } else if (gameUser.chancellor === 1) {
-        setErrorMessage(
-          "Congratulations Chancellor, the ballot passed " +
-            data.jas +
-            " to " +
-            data.neins +
-            "! Waiting for your president to discard a policy."
-        );
-        setDisplayErrorOpen(true);
-      } else {
-        setErrorMessage(
-          "The ballot passed  " +
-            data.jas +
-            " to " +
-            data.neins +
-            "! Waiting for your elected officials to pass a policy."
-        );
-        setDisplayErrorOpen(true);
-      }
+      setErrorMessage(
+        "The ballot passed " + data.jas + " to " + data.neins + "!"
+      );
+      setDisplayErrorOpen(true);
     });
-    socket.on("chancellor-policies", (data) => {
-      if (gameUser.chancellor === 1) {
-        setChoosePolicyOpen(true);
-      }
+    socket.on("president-policies", () => {
+      setChoosePolicyOpen(true);
+    });
+    socket.on("chancellor-policies", () => {
+      setChoosePolicyOpen(true);
+    });
+    /* Fascists win */
+    socket.on("fascists-win", (data) => {
+      handleDisplayErrorClose();
+      setErrorMessage(data.message);
+      setDisplayErrorOpen(true);
+    });
+    /* Liberals win */
+    socket.on("liberals-win", (data) => {
+      handleDisplayErrorClose();
+      setErrorMessage(data.message);
+      setDisplayErrorOpen(true);
     });
   }, [
     socket,
@@ -169,7 +149,7 @@ function SHComponent(props) {
         onSubmit={handleChooseChancellor}
         gameUsers={gameUsers}
         currentUser={gameUser}
-        playerCount={playerCount}
+        playerCount={gameUsers.length}
         title="Chancellor Selection"
       />
       <CastBallotModal
@@ -178,7 +158,7 @@ function SHComponent(props) {
         onSubmit={handleCastBallot}
         gameUsers={gameUsers}
         currentUser={gameUser}
-        playerCount={playerCount}
+        playerCount={gameUsers.length}
         title="Cast your ballot"
       />
       <ChoosePolicyModal
@@ -192,7 +172,7 @@ function SHComponent(props) {
       <TableTopComponent
         gameUsers={gameUsers}
         currentUser={gameUser}
-        playerCount={playerCount}
+        playerCount={gameUsers.length}
       />
     </>
   );

@@ -10,7 +10,7 @@ function ChooseChancellorModal(props) {
   const eligibleUsers = props.gameUsers.filter(
     (gameUser) =>
       gameUser.role_id !== currentUser.role_id &&
-      gameUser.president === 0 &&
+      gameUser.prev_president === 0 &&
       gameUser.prev_chancellor === 0
   );
   const playerCount = props.playerCount;

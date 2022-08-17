@@ -9,7 +9,6 @@ import "../styles/tabletop.css";
 function TableTopComponent(props) {
   const gameUsers = props.gameUsers;
   const currentUser = props.currentUser;
-  const playerCount = props.playerCount;
   const deckPolicies = useSelector((state) => state.deckPolicies);
   const discardedPolicies = useSelector((state) => state.discardedPolicies);
   const enactedPolicies = useSelector((state) => state.enactedPolicies);
@@ -21,7 +20,7 @@ function TableTopComponent(props) {
           <GameUserImageComponent
             gameUser={gameUser}
             currentUser={currentUser}
-            playerCount={playerCount}
+            playerCount={gameUsers.length}
           ></GameUserImageComponent>
         ))}
       </Container>
@@ -35,7 +34,7 @@ function TableTopComponent(props) {
           enactedCount={
             enactedPolicies.filter((card) => card.fascist === 1).length
           }
-          playerCount={playerCount}
+          playerCount={gameUsers.length}
         />
       </Container>
       <Container className="verticalCenter">
@@ -52,7 +51,7 @@ function TableTopComponent(props) {
           enactedCount={
             enactedPolicies.filter((card) => card.fascist === 0).length
           }
-          playerCount={playerCount}
+          playerCount={gameUsers.length}
         />
       </Container>
     </>
