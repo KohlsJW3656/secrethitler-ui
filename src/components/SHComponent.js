@@ -54,6 +54,36 @@ function SHComponent(props) {
     socket.on("chancellor-policies", () => {
       setChoosePolicyOpen(true);
     });
+    /* Investigate Loyalty */
+    socket.on("investigate-loyalty", (data) => {
+      handleDisplayErrorClose();
+      setErrorMessage(data.presidentialPower.description);
+      setDisplayErrorOpen(true);
+    });
+    /* Call Special Election */
+    socket.on("call-special-election", (data) => {
+      handleDisplayErrorClose();
+      setErrorMessage(data.presidentialPower.description);
+      setDisplayErrorOpen(true);
+    });
+    /* Policy Peek */
+    socket.on("policy-peek", (data) => {
+      handleDisplayErrorClose();
+      setErrorMessage(data.presidentialPower.description);
+      setDisplayErrorOpen(true);
+    });
+    /* Execution */
+    socket.on("execution", (data) => {
+      handleDisplayErrorClose();
+      setErrorMessage(data.presidentialPower.description);
+      setDisplayErrorOpen(true);
+    });
+    /* Execution Veto */
+    socket.on("execution-veto", (data) => {
+      handleDisplayErrorClose();
+      setErrorMessage(data.presidentialPower.description);
+      setDisplayErrorOpen(true);
+    });
     /* Fascists win */
     socket.on("fascists-win", (data) => {
       handleDisplayErrorClose();
