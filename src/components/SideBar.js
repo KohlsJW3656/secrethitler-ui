@@ -9,10 +9,11 @@ function SideBar(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const admin = useSelector((state) => state.admin);
+  const socket = useSelector((state) => state.socket);
 
   const handleLogout = (event) => {
     event.preventDefault();
-    dispatch(startLoggingOutUser(props.history));
+    dispatch(startLoggingOutUser(socket, props.history));
   };
 
   return (
@@ -21,10 +22,6 @@ function SideBar(props) {
         <h3 className="p-2 center">
           {user.first_name} {user.last_name}
         </h3>
-
-        <div className="center">
-          <img src="../images/players/1.png" />
-        </div>
 
         <div className="d-flex flex-column mt-2">
           {admin && (
@@ -41,6 +38,19 @@ function SideBar(props) {
           >
             Dashboard
           </Link>
+          <Link
+            to="/game"
+            className={`aLink ${props.active === "game" ? "active" : ""}`}
+          >
+            Game
+          </Link>
+          <a
+            href="/rules/rules.pdf"
+            target="_blank"
+            className={`aLink ${props.active === "rules" ? "active" : ""}`}
+          >
+            Rules
+          </a>
           <Link
             to="/account"
             className={`aLink ${props.active === "account" ? "active" : ""}`}

@@ -7,18 +7,22 @@ yarn start to start the application
 
 Note: Assets are not mine
 
-For now, the policy cards are the only thing implemented. 
+Refer to Secret Hitler’s official website for rules on how to play.
+
+Getting into a game:
+
+Simply head to the URL, create an account/sign in, and create/join a game. Once there are at least 5 players in a lobby and all players are ready, the host can start the game.
 
 Order of play:
 
-When it's the presidents turn, click draw policies and select a policy to discard. Once they are done, the chancellor will click draw policies and select the policy to enact.
-Shuffle Deck shuffle the discarded cards back in.
+Once the game starts, your role will be revealed to you, and random player will start as the first president. The president will then nominate a chancellor, after which all players will vote to elect these two nominees. 
 
-If the government vote fails 3 times in a row, pressing Enact Top Policy will automatically enact the top policy card. To make the game spicy and more fun, if the policy was fascist, the last enacted president gets to play that policy (i.e., vote fails 3 times, the last president with a passing vote gets to kill, investigate, or select the next president)
+If the vote passes, the president will be shown the top 3 policies. They will select a policy to discard, in which the chancellor will select one of the remaining two policies to enact.
+
+If the government vote fails 3 times in a row, the top policy will be automatically enacted. To make the game spicy and more fun, if the policy was fascist, the last enacted president gets to play that policy (i.e., vote fails 3 times, the last president with a passing vote gets to kill, investigate, or select the next president)
 
 When there are 5 fascist policies enacted, veto powers are unlocked. If the chancellor wishes to veto, and the president agrees, the chancellor can select the veto button to discard all cards. If the president doesn't agree, the chancellor must select a policy to enact.
-When a team has won, press Reset Game to reset the game.
 
-For best play, have 1 person stream a Secret Hitler game on TableTop Simulator on discord or other service. The player in Table Top will give everyone their roles by bringing them to a separate channel and flipping their secret identity card over. Once all players have their roles, use discord to call friends and turn face cameras on. To help with facial reactions, it's best for the president and chancellor to turn their face cameras off when discarding and enacting policies.
+When a team has won, players can either leave the lobby or play again with the same group.
 
 URL: https://secrethitleronline.duckdns.org

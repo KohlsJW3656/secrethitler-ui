@@ -4,10 +4,10 @@ import SideBar from "../components/SideBar";
 import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Container from "react-bootstrap/Container";
-import DashboardComponent from "../components/DashboardComponent";
+import RevealRoleComponent from "../components/RevealRoleComponent";
 import FooterComponent from "../components/FooterComponent";
 
-function Dashboard({ history }) {
+function RevealRole({ history }) {
   const authenticated = useSelector((state) => state.authenticated);
 
   useEffect(() => {
@@ -18,13 +18,13 @@ function Dashboard({ history }) {
 
   return (
     <>
-      <SideBar history={history} active="dashboard" />
+      <SideBar history={history} active="game" />
       <Container>
-        <DashboardComponent history={history} />
+        <RevealRoleComponent history={history} />
         <FooterComponent />
       </Container>
     </>
   );
 }
 
-export default withRouter(Dashboard);
+export default withRouter(RevealRole);

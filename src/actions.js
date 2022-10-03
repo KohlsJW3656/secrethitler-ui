@@ -1,4 +1,11 @@
+import { io } from "socket.io-client";
+
 export const Action = Object.freeze({
+  /* Games */
+  FinishCreatingGame: "FinishCreatingGame",
+  FinishJoiningGame: "FinishJoiningGame",
+  FinishLoadingJoinableGames: "FinishLoadingJoinableGames",
+
   /* Policies */
   FinishLoadingAllPolicies: "FinishLoadingAllPolicies",
   FinishLoadingDrawPolicies: "FinishLoadingDrawPolicies",
@@ -25,7 +32,10 @@ export const Action = Object.freeze({
   DismissNotification: "DismissNotification",
 
   /* Sockets */
+  SetSocket: "SetSocket",
   SetPlayerCount: "SetPlayerCount",
+  SetGameUsers: "SetGameUsers",
+  SetGamePolicies: "SetGamePolicies",
 });
 
 export const host = "https://secrethitleronline.duckdns.org:8445";
@@ -37,8 +47,127 @@ function checkForErrors(response) {
   return response;
 }
 
-/*********************************** Policies ***********************************/
-export function startGettingAllPolicies(jwt) {
+/*********************************** Games ***********************************/
+export function startCreatingGame(
+  name,
+  username,
+  private_game,
+  password,
+  socket,
+  history,
+  jwt
+) {
+  const game = { name, private_game, password };
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(game),
+  };
+
+  return (dispatch) => {
+    fetch(`${host}/game/create`, options)
+      .then(checkForErrors)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.ok) {
+          game.game_id = data.id;
+          dispatch(FinishCreatingGame(game));
+          dispatch(
+            AddNotification({
+              type: "success",
+              message: "Game Created Successfully!",
+            })
+          );
+          dispatch(
+            startJoiningGame(
+              game.game_id,
+              username,
+              password,
+              socket,
+              history,
+              jwt
+            )
+          );
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        dispatch(
+          AddNotification({
+            type: "danger",
+            message: "Warning! Failed to create game!!",
+          })
+        );
+      });
+  };
+}
+
+export function FinishCreatingGame(game) {
+  return {
+    type: Action.FinishCreatingGame,
+    payload: game,
+  };
+}
+
+export function startJoiningGame(
+  game_id,
+  username,
+  password,
+  socket,
+  history,
+  jwt
+) {
+  const gameUser = { game_id, username, password };
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(gameUser),
+  };
+
+  return (dispatch) => {
+    fetch(`${host}/gameuser/join`, options)
+      .then(checkForErrors)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.ok) {
+          gameUser.game_user_id = data.id;
+          dispatch(FinishJoiningGame(gameUser));
+          socket.emit("join-game", { username, game_id });
+          history.push("/lobby");
+          dispatch(
+            AddNotification({
+              type: "success",
+              message: "User Successfully joined!",
+            })
+          );
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        dispatch(
+          AddNotification({
+            type: "danger",
+            message: "Incorrect password, or the game is no longer joinable",
+          })
+        );
+      });
+  };
+}
+
+export function FinishJoiningGame(gameUser) {
+  return {
+    type: Action.FinishJoiningGame,
+    payload: gameUser,
+  };
+}
+
+export function startGettingJoinableGames(jwt) {
   const options = {
     method: "GET",
     headers: {
@@ -48,232 +177,28 @@ export function startGettingAllPolicies(jwt) {
     credentials: "include",
   };
   return (dispatch) => {
-    fetch(`${host}/policy/all`, options)
+    fetch(`${host}/game/all/joinable`, options)
       .then(checkForErrors)
       .then((response) => response.json())
       .then((data) => {
         if (data.ok) {
-          dispatch(FinishLoadingAllPolicies(data.allPolicies));
+          dispatch(FinishLoadingJoinableGames(data.joinableGames));
         }
       })
       .catch((e) => console.error(e));
   };
 }
 
-export function FinishLoadingAllPolicies(allPolicies) {
+export function FinishLoadingJoinableGames(joinableGames) {
   return {
-    type: Action.FinishLoadingAllPolicies,
-    payload: allPolicies,
-  };
-}
-
-export function startGettingDrawPolicies(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/draw`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingDrawPolicies(data.drawPolicies));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingDrawPolicies(drawPolicies) {
-  return {
-    type: Action.FinishLoadingDrawPolicies,
-    payload: drawPolicies,
-  };
-}
-
-export function startGettingDeckPolicies(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/deck`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingDeckPolicies(data.deckPolicies));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingDeckPolicies(deckPolicies) {
-  return {
-    type: Action.FinishLoadingDeckPolicies,
-    payload: deckPolicies,
-  };
-}
-
-export function startGettingDiscardedPolicies(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/discarded`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingDiscardedPolicies(data.discardedPolicies));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingDiscardedPolicies(discardedPolicies) {
-  return {
-    type: Action.FinishLoadingDiscardedPolicies,
-    payload: discardedPolicies,
-  };
-}
-
-export function startGettingEnactedPolicies(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/enacted`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingEnactedPolicies(data.enactedPolicies));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingEnactedPolicies(enactedPolicies) {
-  return {
-    type: Action.FinishLoadingEnactedPolicies,
-    payload: enactedPolicies,
-  };
-}
-
-export function startGettingNotEnactedPolicies(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/notenacted`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingNotEnactedPolicies(data.notEnactedPolicies));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingNotEnactedPolicies(notEnactedPolicies) {
-  return {
-    type: Action.FinishLoadingNotEnactedPolicies,
-    payload: notEnactedPolicies,
-  };
-}
-
-export function startGettingTopPolicy(jwt) {
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  };
-  return (dispatch) => {
-    fetch(`${host}/policy/top`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishLoadingTopPolicy(data.topPolicy));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishLoadingTopPolicy(topPolicy) {
-  return {
-    type: Action.FinishLoadingTopPolicy,
-    payload: topPolicy,
-  };
-}
-
-export function startEditingPolicy(policy, jwt) {
-  const options = {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(policy),
-  };
-
-  return (dispatch) => {
-    fetch(`${host}/policy/edit`, options)
-      .then(checkForErrors)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.ok) {
-          dispatch(FinishEditingPolicy(policy));
-        }
-      })
-      .catch((e) => console.error(e));
-  };
-}
-
-export function FinishEditingPolicy(policy) {
-  return {
-    type: Action.FinishEditingPolicy,
-    payload: policy,
+    type: Action.FinishLoadingJoinableGames,
+    payload: joinableGames,
   };
 }
 
 /*********************************** User Login ***********************************/
 
-export function startLoggingInUser(email, password, history) {
+export function startLoggingInUser(email, password, socket) {
   const source = "Website";
   const user = { email, password, source };
   const loginOptions = {
@@ -292,8 +217,6 @@ export function startLoggingInUser(email, password, history) {
       .then((data) => {
         if (data.ok) {
           dispatch(finishLoggingInUser(data.jwt));
-          history.push("/dashboard");
-
           const getUserOptions = {
             method: "GET",
             headers: {
@@ -307,6 +230,7 @@ export function startLoggingInUser(email, password, history) {
             .then((response) => response.json())
             .then((userData) => {
               if (userData.ok) {
+                socket.emit("login", { user_id: userData.user[0].user_id });
                 dispatch(finishSettingUser(userData.user[0]));
                 dispatch(DismissNotification());
               }
@@ -348,16 +272,8 @@ export function finishSettingUser(user) {
   };
 }
 
-export function startEditingUser(
-  user_id,
-  first_name,
-  last_name,
-  email,
-  password,
-  jwt
-) {
+export function startEditingUser(first_name, last_name, email, password, jwt) {
   const user = {
-    user_id,
     first_name,
     last_name,
     email,
@@ -378,7 +294,6 @@ export function startEditingUser(
       .then((response) => response.json())
       .then((data) => {
         if (data.ok) {
-          user.user_id = user_id;
           dispatch(FinishEditingUser(user));
           dispatch(
             AddNotification({
@@ -409,10 +324,14 @@ export function FinishEditingUser(user) {
 
 /*********************************** User Logout ***********************************/
 
-export function startLoggingOutUser(history) {
+export function startLoggingOutUser(socket, history, message) {
   return (dispatch) => {
     document.cookie = "jwt= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+    socket.emit("logout");
     dispatch(finishLoggingOutUser());
+    if (message) {
+      dispatch(AddNotification({ type: "danger", message: message }));
+    }
     history.push("/");
   };
 }
@@ -670,9 +589,32 @@ export function DismissNotification() {
 
 /********************************** Sockets **********************************/
 
+export function setSocket() {
+  const socket = io(host);
+  //const socket = io("http://localhost:3445");
+  return {
+    type: Action.SetSocket,
+    payload: socket,
+  };
+}
+
 export function setPlayerCount(playerCount) {
   return {
     type: Action.SetPlayerCount,
     payload: playerCount,
+  };
+}
+
+export function setGameUsers(data) {
+  return {
+    type: Action.SetGameUsers,
+    payload: data,
+  };
+}
+
+export function setGamePolicies(data) {
+  return {
+    type: Action.SetGamePolicies,
+    payload: data,
   };
 }

@@ -4,116 +4,52 @@ const initialState = {
   isWaiting: false,
   authenticated: false,
   jwt: "",
+  socket: null,
   user: {},
   email: "",
   admin: false,
   notification: {},
   users: [],
-  allPolicies: [],
+  topPolicy: {},
+  playerCount: 0,
+  gameUsers: [],
+  gamePolicies: [],
   drawPolicies: [],
   deckPolicies: [],
   discardedPolicies: [],
   enactedPolicies: [],
-  notEnactedPolicies: [],
-  topPolicy: {},
-  playerCount: 0,
+  gameHost: false,
+  fascist: false,
+  hitler: false,
+  liberals: [],
+  fascists: [],
+  game: {},
+  gameUser: {},
+  joinableGames: [],
 };
 
 function reducer(state = initialState, action) {
   switch (action.type) {
-    /**** Policies  ****/
-    case Action.FinishLoadingAllPolicies:
+    /**** Game  ****/
+    case Action.FinishCreatingGame:
       return {
         ...state,
-        allPolicies: action.payload,
-        drawPolicies: action.payload.filter(
-          (policy) =>
-            policy.deckOrder < 3 &&
-            policy.isDiscarded === 0 &&
-            policy.isEnacted === 0
-        ),
-        deckPolicies: action.payload.filter(
-          (policy) => policy.isDiscarded === 0 && policy.isEnacted === 0
-        ),
-        discardedPolicies: action.payload.filter(
-          (policy) => policy.isDiscarded === 1 && policy.isEnacted === 0
-        ),
-        enactedPolicies: action.payload.filter(
-          (policy) => policy.isEnacted === 1
-        ),
-        notEnactedPolicies: action.payload.filter(
-          (policy) => policy.isEnacted === 0
-        ),
-        topPolicy: action.payload.filter(
-          (policy) =>
-            policy.deckOrder === 0 &&
-            policy.isDiscarded === 0 &&
-            policy.isEnacted === 0
+        game: action.payload,
+        joinableGames: [action.payload],
+      };
+    case Action.FinishJoiningGame:
+      return {
+        ...state,
+        game: state.joinableGames.filter(
+          (joinableGame) => joinableGame.game_id === action.payload.game_id
         )[0],
+        gameUser: action.payload,
+        gameUsers: [action.payload],
       };
-    case Action.FinishLoadingDrawPolicies:
+    case Action.FinishLoadingJoinableGames:
       return {
         ...state,
-        drawPolicies: action.payload,
-      };
-    case Action.FinishLoadingDeckPolicies:
-      return {
-        ...state,
-        deckPolicies: action.payload,
-      };
-    case Action.FinishLoadingDiscardedPolicies:
-      return {
-        ...state,
-        discardedPolicies: action.payload,
-      };
-    case Action.FinishLoadingEnactedPolicies:
-      return {
-        ...state,
-        enactedPolicies: action.payload,
-      };
-    case Action.FinishLoadingNotEnactedPolicies:
-      return {
-        ...state,
-        notEnactedPolicies: action.payload,
-      };
-    case Action.FinishLoadingTopPolicy:
-      return {
-        ...state,
-        topPolicy: action.payload,
-      };
-    case Action.FinishEditingPolicy:
-      return {
-        ...state,
-        allPolicies: state.allPolicies.map((policy) =>
-          policy.policy_id === action.payload.policy_id
-            ? action.payload
-            : policy
-        ),
-        drawPolicies: state.drawPolicies.map((policy) =>
-          policy.policy_id === action.payload.policy_id
-            ? action.payload
-            : policy
-        ),
-        deckPolicies: state.deckPolicies.map((policy) =>
-          policy.policy_id === action.payload.policy_id
-            ? action.payload
-            : policy
-        ),
-        discardedPolicies: state.discardedPolicies.map((policy) =>
-          policy.policy_id === action.payload.policy_id
-            ? action.payload
-            : policy
-        ),
-        enactedPolicies: state.enactedPolicies.map((policy) =>
-          policy.policy_id === action.payload.policy_id
-            ? action.payload
-            : policy
-        ),
-        notEnactedPolicies: state.notEnactedPolicies.map((policy) =>
-          policy.policy_id === action.payload.policy_id
-            ? action.payload
-            : policy
-        ),
+        joinableGames: action.payload,
       };
     /**** User Login  ****/
     case Action.FinishLoggingInUser:
@@ -184,10 +120,58 @@ function reducer(state = initialState, action) {
         notification: {},
       };
     /**** Sockets ****/
+    case Action.SetSocket:
+      return {
+        ...state,
+        socket: action.payload,
+      };
     case Action.SetPlayerCount:
       return {
         ...state,
         playerCount: action.payload,
+      };
+    case Action.SetGameUsers:
+      return {
+        ...state,
+        gameUser: action.payload.result.filter(
+          (gameUser) => gameUser.user_id === state.user.user_id
+        )[0],
+        gameUsers: action.payload.result,
+        fascists: action.payload.result.filter(
+          (gameUser) => gameUser.party_membership
+        ),
+        liberals: action.payload.result.filter(
+          (gameUser) => !gameUser.party_membership
+        ),
+        gameHost: action.payload.result[0].user_id === state.user.user_id,
+        fascist:
+          action.payload.result.filter(
+            (gameUser) => gameUser.user_id === state.user.user_id
+          )[0].party_membership === 1,
+        hitler:
+          action.payload.result.filter(
+            (gameUser) => gameUser.user_id === state.user.user_id
+          )[0].role_id === 1,
+      };
+    case Action.SetGamePolicies:
+      return {
+        ...state,
+        gamePolicies: action.payload.gamePolicies,
+        drawPolicies: action.payload.gamePolicies.filter(
+          (policy) =>
+            policy.deck_order <= 3 &&
+            policy.discarded === 0 &&
+            policy.enacted === 0
+        ),
+        deckPolicies: action.payload.gamePolicies.filter(
+          (policy) => policy.discarded === 0 && policy.enacted === 0
+        ),
+        discardedPolicies: action.payload.gamePolicies.filter(
+          (policy) => policy.discarded === 1 && policy.enacted === 0
+        ),
+        enactedPolicies: action.payload.gamePolicies.filter(
+          (policy) => policy.enacted === 1
+        ),
       };
     default:
       return state;

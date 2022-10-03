@@ -7,6 +7,7 @@ import Notification from "../components/Notification";
 import { startSendingEmail } from "../actions";
 
 import "../styles/home.css";
+import FooterComponent from "../components/FooterComponent";
 
 function Forgotpassword({ history }) {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ function Forgotpassword({ history }) {
           </div>
         </Form>
       </div>
+      <FooterComponent />
     </>
   );
 }

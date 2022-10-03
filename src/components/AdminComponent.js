@@ -8,11 +8,13 @@ import Button from "react-bootstrap/Button";
 import Notification from "./Notification";
 import UserModal from "./UserModal";
 import ErrorModal from "./ErrorModal";
+import { Container } from "react-bootstrap";
 
 function AdminComponent(props) {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.users);
   const jwt = useSelector((state) => state.jwt);
+  const playerCount = useSelector((state) => state.playerCount);
   const [errorMessage, setErrorMessage] = useState("");
   const [displayErrorOpen, setDisplayErrorOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -106,8 +108,12 @@ function AdminComponent(props) {
   };
 
   return (
-    <div>
+    <div className="admin">
       <Notification></Notification>
+      <h1 className="pageTitle">Secret Hitler</h1>
+      <Container>
+        <p>Connected Players: {playerCount}</p>
+      </Container>
       <div className="flex justify-content-between align-items-center my-2">
         <h1>Users</h1>
         <BootstrapTable

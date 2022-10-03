@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as useParams, withRouter } from "react-router-dom";
+import { useParams, withRouter } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -7,6 +7,7 @@ import Notification from "../components/Notification";
 import { startResettingPassword } from "../actions";
 
 import "../styles/home.css";
+import FooterComponent from "../components/FooterComponent";
 
 function Resetpassword({ history }) {
   const dispatch = useDispatch();
@@ -31,9 +32,7 @@ function Resetpassword({ history }) {
     <>
       <Notification></Notification>
       <div className="home">
-        <h1>
-          <span class="logoText">New Password</span>
-        </h1>
+        <h1>New Password</h1>
         <Form onSubmit={resetPassword}>
           <Form.Group controlId="NewPassword1">
             <Form.Label>Type Your New Password</Form.Label>
@@ -60,12 +59,13 @@ function Resetpassword({ history }) {
           </Form.Group>
           <p className="inline"></p>
           <div className="but1">
-            <Button className="button but" type="submit">
+            <Button type="submit" className="but">
               Confirm
             </Button>
           </div>
         </Form>
       </div>
+      <FooterComponent />
     </>
   );
 }

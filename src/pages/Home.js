@@ -1,21 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, withRouter } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { startLoggingInUser } from "../actions";
 import Notification from "../components/Notification";
 
 import "../styles/home.css";
+import FooterComponent from "../components/FooterComponent";
 
 function Home({ history }) {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const socket = useSelector((state) => state.socket);
+
+  /* On successful login, send client to dashboard */
+  useEffect(() => {
+    if (socket == null) return;
+    socket.on("login", () => history.push("/dashboard"));
+  }, [socket, history]);
 
   const onLogin = (event) => {
     event.preventDefault();
-    dispatch(startLoggingInUser(email, password, history));
+    dispatch(startLoggingInUser(email, password, socket, history));
   };
 
   return (
@@ -68,6 +76,7 @@ function Home({ history }) {
           </div>
         </Form>
       </div>
+      <FooterComponent />
     </>
   );
 }

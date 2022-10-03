@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Link, useHistory } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Policy } from "../components/Policy";
-import { startGettingAllPolicies, startEditingPolicy } from "../actions";
+import Policy from "./Policy";
 import { withRouter } from "react-router-dom";
 import { Container } from "react-bootstrap";
 
@@ -15,15 +14,15 @@ function OfficialsComponent() {
   const deckPolicies = useSelector((state) => state.deckPolicies);
 
   useEffect(() => {
-    dispatch(startGettingAllPolicies(jwt));
-  }, []);
+    //dispatch(startGettingAllPolicies(jwt));
+  }, [dispatch, jwt]);
 
   const setDiscarded = (policy) => {
     drawPolicies.filter(
       (currentPolicy) => currentPolicy.policy_id !== policy.policy_id
     );
     policy.isDiscarded = 1;
-    dispatch(startEditingPolicy(policy, jwt));
+    //dispatch(startEditingPolicy(policy, jwt));
     setTimeout(() => history.push(`/dashboard`), 500);
   };
 
@@ -32,10 +31,10 @@ function OfficialsComponent() {
       (currentPolicy) => currentPolicy.policy_id !== policy.policy_id
     )[0];
     otherPolicy.isDiscarded = 1;
-    dispatch(startEditingPolicy(otherPolicy, jwt));
+    //dispatch(startEditingPolicy(otherPolicy, jwt));
 
     policy.isEnacted = 1;
-    dispatch(startEditingPolicy(policy, jwt));
+    //dispatch(startEditingPolicy(policy, jwt));
 
     resetDeckOrder(
       deckPolicies.filter(
@@ -50,7 +49,7 @@ function OfficialsComponent() {
   const resetDeckOrder = (array) => {
     for (let i = 0; i < array.length; i++) {
       array[i].deckOrder = i;
-      dispatch(startEditingPolicy(array[i], jwt));
+      //  dispatch(startEditingPolicy(array[i], jwt));
     }
   };
 

@@ -1,29 +1,33 @@
 import React from "react";
 import "../styles/policy.css";
 
-export function Policy(props) {
+function Policy(props) {
   const policy = props.policy;
-  const drawPolicies = props.drawPolicies;
+  const gamePolicies = props.gamePolicies;
   let path =
-    policy.type === "Liberal"
-      ? "../images/liberalpolicy.png"
-      : "../images/fascistpolicy.png";
+    policy.fascist === 1
+      ? "../images/fascistpolicy.png"
+      : "../images/liberalpolicy.png";
 
   return (
     <>
       <div className="buttonContainer">
-        <img className="policy" src={path} alt={policy.type + " policy"} />
-        {drawPolicies.length === 2 ? (
+        <img
+          className="policy"
+          src={path}
+          alt={policy.fascist === 1 ? "Fascist policy" : "Liberal policy"}
+        />
+        {gamePolicies.length === 2 ? (
           <button
             className="actionButton button"
-            onClick={() => props.setEnacted(policy)}
+            onClick={() => props.select(policy.game_policy_id, true)}
           >
             Enact
           </button>
         ) : (
           <button
             className="button actionButton"
-            onClick={() => props.setDiscarded(policy)}
+            onClick={() => props.select(policy.game_policy_id, false)}
           >
             Discard
           </button>
@@ -32,3 +36,4 @@ export function Policy(props) {
     </>
   );
 }
+export default Policy;

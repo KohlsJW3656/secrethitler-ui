@@ -25,13 +25,13 @@ td {
 /* If modal table, set a smaller height */
 .modal-body > .react-bootstrap-table {
   background-color: rgb(230, 100, 67);
-  height: 50vh;
+  /* height: 50vh; */
   overflow: auto;
 }
 
 .react-bootstrap-table {
   background-color: rgb(230, 100, 67);
-  height: 80vh;
+  /* height: 80vh; */
   overflow: auto;
 }
 
