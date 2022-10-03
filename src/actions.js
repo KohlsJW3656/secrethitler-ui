@@ -38,7 +38,7 @@ export const Action = Object.freeze({
   SetGamePolicies: "SetGamePolicies",
 });
 
-export const host = "https://secrethitleronline.duckdns.org:8445";
+export const host = "https://secrethitleronline-d.duckdns.org:8445";
 
 function checkForErrors(response) {
   if (!response.ok) {
