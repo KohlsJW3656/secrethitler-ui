@@ -5,7 +5,7 @@ import "../styles/tabletop.css";
 function GameUserImageComponent(props) {
   const currentUser = props.currentUser;
   const playerCount = props.playerCount;
-  const chooseChancellor = props.chooseChancellor;
+  const showButtons = props.showButtons;
   const gameUser = props.gameUser;
   const fascist = useSelector((state) => state.fascist);
   const hitler = useSelector((state) => state.hitler);
@@ -42,7 +42,7 @@ function GameUserImageComponent(props) {
           alt="Chancellor Plaque"
         />
       )}
-      {chooseChancellor && (
+      {showButtons && (
         <button
           className="button"
           onClick={() => props.select(gameUser.game_user_id)}

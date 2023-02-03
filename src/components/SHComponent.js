@@ -4,7 +4,8 @@ import { withRouter } from "react-router-dom";
 
 import TableTopComponent from "./TableTopComponent";
 import ErrorModal from "./ErrorModal";
-import ChooseChancellorModal from "./ChooseChancellorModal";
+import ConfirmModal from "./ConfirmModal";
+import ChoosePlayerModal from "./ChoosePlayerModal";
 import CastBallotModal from "./CastBallotModal";
 import ChoosePolicyModal from "./ChoosePolicyModal";
 
@@ -15,17 +16,45 @@ function SHComponent(props) {
   const gameUsers = useSelector((state) => state.gameUsers);
   const gameUser = useSelector((state) => state.gameUser);
   const drawPolicies = useSelector((state) => state.drawPolicies);
-  const [errorMessage, setErrorMessage] = useState("");
+  const enactedPolicies = useSelector((state) => state.enactedPolicies);
+  const [eligibleUsers, setEligibleUsers] = useState([]);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
   const [displayErrorOpen, setDisplayErrorOpen] = useState(false);
-  const [chooseChancellorOpen, setChooseChancellorOpen] = useState(false);
+  const [choosePlayerOpen, setChoosePlayerOpen] = useState(false);
   const [castBallotOpen, setCastBallotOpen] = useState(false);
   const [choosePolicyOpen, setChoosePolicyOpen] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [policyPeek, setPolicyPeek] = useState(false);
+  const [execution, setExecution] = useState(false);
+  const [declinedVeto, setDeclinedVeto] = useState(false);
 
   useEffect(() => {
     if (socket == null) return;
     /* The President will begin choosing a chancellor */
     socket.on("choose-chancellor", () => {
-      setChooseChancellorOpen(true);
+      setModalTitle("Choose a Chancellor");
+
+      // The previous president can be chancellor when 4 or less players are in
+      if (gameUsers.length > 4) {
+        setEligibleUsers(
+          gameUsers.filter(
+            (eligibleUser) =>
+              eligibleUser.role_id !== gameUser.role_id &&
+              eligibleUser.prev_president === 0 &&
+              eligibleUser.prev_chancellor === 0
+          )
+        );
+      } else {
+        setEligibleUsers(
+          gameUsers.filter(
+            (eligibleUser) =>
+              eligibleUser.role_id !== gameUser.role_id &&
+              eligibleUser.prev_chancellor === 0
+          )
+        );
+      }
+      setChoosePlayerOpen(true);
     });
     /* Users will cast their ballots */
     socket.on("initiate-ballot", () => {
@@ -35,7 +64,7 @@ function SHComponent(props) {
     /* The ballot failed */
     socket.on("ballot-failed", (data) => {
       handleDisplayErrorClose();
-      setErrorMessage(
+      setModalMessage(
         "The ballot failed " + data.jas + " to " + data.neins + "!"
       );
       setDisplayErrorOpen(true);
@@ -43,57 +72,76 @@ function SHComponent(props) {
     /* The ballot passed */
     socket.on("ballot-passed", (data) => {
       handleDisplayErrorClose();
-      setErrorMessage(
+      setModalMessage(
         "The ballot passed " + data.jas + " to " + data.neins + "!"
       );
       setDisplayErrorOpen(true);
     });
+    /* President chooses a policy to discard */
     socket.on("president-policies", () => {
+      setModalTitle("Select a policy to discard");
       setChoosePolicyOpen(true);
     });
-    socket.on("chancellor-policies", () => {
+    /* Chancellor chooses a policy to enact */
+    socket.on("chancellor-policies", (data) => {
+      setModalTitle("Select a policy to enact");
+      if (data?.declinedVeto) {
+        setDeclinedVeto(true);
+      }
       setChoosePolicyOpen(true);
+    });
+    /* President chooses to accept/deny the veto */
+    socket.on("requested-veto", () => {
+      setModalTitle("Select a policy to enact");
+      setModalMessage(
+        "The chancellor has requested a veto, would you like to veto this policy?"
+      );
+      setConfirmModalOpen(true);
     });
     /* Investigate Loyalty */
     socket.on("investigate-loyalty", (data) => {
       handleDisplayErrorClose();
-      setErrorMessage(data.presidentialPower.description);
+      setModalMessage(data.presidentialPower.description);
       setDisplayErrorOpen(true);
     });
     /* Call Special Election */
     socket.on("call-special-election", (data) => {
       handleDisplayErrorClose();
-      setErrorMessage(data.presidentialPower.description);
+      setModalMessage(data.presidentialPower.description);
       setDisplayErrorOpen(true);
     });
     /* Policy Peek */
     socket.on("policy-peek", (data) => {
-      handleDisplayErrorClose();
-      setErrorMessage(data.presidentialPower.description);
-      setDisplayErrorOpen(true);
+      setPolicyPeek(true);
+      setModalTitle(data.presidentialPower.description);
+      setChoosePolicyOpen(true);
     });
     /* Execution */
     socket.on("execution", (data) => {
-      handleDisplayErrorClose();
-      setErrorMessage(data.presidentialPower.description);
-      setDisplayErrorOpen(true);
+      setExecution(true);
+      setModalTitle(data.presidentialPower.description);
+      setEligibleUsers(
+        gameUsers.filter(
+          (eligibleUser) => eligibleUser.role_id !== gameUser.role_id
+        )
+      );
+      setChoosePlayerOpen(true);
     });
     /* Execution Veto */
     socket.on("execution-veto", (data) => {
-      handleDisplayErrorClose();
-      setErrorMessage(data.presidentialPower.description);
-      setDisplayErrorOpen(true);
+      setExecution(true);
+      setModalTitle(data.presidentialPower.description);
+      setEligibleUsers(
+        gameUsers.filter(
+          (eligibleUser) => eligibleUser.role_id !== gameUser.role_id
+        )
+      );
+      setChoosePlayerOpen(true);
     });
-    /* Fascists win */
-    socket.on("fascists-win", (data) => {
+    /* The game is won */
+    socket.on("game-win", (data) => {
       handleDisplayErrorClose();
-      setErrorMessage(data.message);
-      setDisplayErrorOpen(true);
-    });
-    /* Liberals win */
-    socket.on("liberals-win", (data) => {
-      handleDisplayErrorClose();
-      setErrorMessage(data.message);
+      setModalMessage(data.message);
       setDisplayErrorOpen(true);
     });
   }, [
@@ -101,6 +149,8 @@ function SHComponent(props) {
     dispatch,
     gameUser.president,
     gameUser.chancellor,
+    gameUser.role_id,
+    gameUsers,
     props.history,
   ]);
 
@@ -108,28 +158,59 @@ function SHComponent(props) {
     setDisplayErrorOpen(false);
   };
 
-  const handleChooseChancellorClose = () => {
-    setErrorMessage("You must select a Chancellor!");
+  const handleChoosePlayerClose = () => {
+    setModalMessage("You must select a Player!");
     setDisplayErrorOpen(true);
   };
 
+  const handleConfirmModalClose = () => {
+    socket.emit("veto-response", {
+      gameId: game.game_id,
+      veto: false,
+    });
+    setConfirmModalOpen(false);
+  };
+
   const handleCastBallotClose = () => {
-    setErrorMessage("You must cast a ballot!");
+    setModalMessage("You must cast a ballot!");
     setDisplayErrorOpen(true);
   };
 
   const handleChoosePolicyClose = () => {
-    setErrorMessage("You must choose a policy!");
-    setDisplayErrorOpen(true);
+    if (policyPeek) {
+      setChoosePolicyOpen(false);
+      setPolicyPeek(false);
+      socket.emit("presidential-power", {
+        gameId: game.game_id,
+      });
+    } else {
+      setModalMessage("You must choose a policy!");
+      setDisplayErrorOpen(true);
+    }
   };
 
-  const handleChooseChancellor = (game_user_id) => {
-    setChooseChancellorOpen(false);
-    socket.emit("assign-chancellor", {
-      gameId: game.game_id,
-      game_user_id: game_user_id,
-      value: 1,
-    });
+  const handleChoosePlayer = (game_user_id) => {
+    setModalTitle(false);
+    setEligibleUsers([]);
+    setChoosePlayerOpen(false);
+    if (execution) {
+      setExecution(false);
+      socket.emit("presidential-power", {
+        gameId: game.game_id,
+        game_user_id: game_user_id,
+        value: 1,
+        execution: true,
+        role_id: gameUsers.filter(
+          (executedUser) => executedUser.game_user_id === game_user_id
+        )[0].role_id,
+      });
+    } else {
+      socket.emit("assign-chancellor", {
+        gameId: game.game_id,
+        game_user_id: game_user_id,
+        value: 1,
+      });
+    }
   };
 
   const handleCastBallot = (ballot) => {
@@ -140,14 +221,30 @@ function SHComponent(props) {
       username: gameUser.username,
       ballot: ballot,
     });
-    setErrorMessage(
+    setModalMessage(
       "Other players are still casting their ballots, please wait for them to finish."
     );
     setDisplayErrorOpen(true);
   };
 
+  const handleVeto = () => {
+    setChoosePolicyOpen(false);
+    socket.emit("request-veto", {
+      gameId: game.game_id,
+    });
+  };
+
+  const handleConfirmModal = () => {
+    socket.emit("veto-response", {
+      gameId: game.game_id,
+      veto: true,
+    });
+    setConfirmModalOpen(false);
+  };
+
   const handleChoosePolicy = (game_policy_id, isEnacted) => {
     setChoosePolicyOpen(false);
+    setDeclinedVeto(false);
     if (isEnacted) {
       socket.emit("enact-policy", {
         gameId: game.game_id,
@@ -171,16 +268,23 @@ function SHComponent(props) {
         onClose={handleDisplayErrorClose}
         onSubmit={handleDisplayErrorClose}
         title="Warning!"
-        message={errorMessage}
+        message={modalMessage}
       />
-      <ChooseChancellorModal
-        open={chooseChancellorOpen}
-        onClose={handleChooseChancellorClose}
-        onSubmit={handleChooseChancellor}
-        gameUsers={gameUsers}
+      <ConfirmModal
+        open={confirmModalOpen}
+        onClose={handleConfirmModalClose}
+        onSubmit={handleConfirmModal}
+        title={modalTitle}
+        message={modalMessage}
+      />
+      <ChoosePlayerModal
+        open={choosePlayerOpen}
+        onClose={handleChoosePlayerClose}
+        onSubmit={handleChoosePlayer}
+        eligibleUsers={eligibleUsers}
         currentUser={gameUser}
         playerCount={gameUsers.length}
-        title="Chancellor Selection"
+        title={modalTitle}
       />
       <CastBallotModal
         open={castBallotOpen}
@@ -195,9 +299,13 @@ function SHComponent(props) {
         open={choosePolicyOpen}
         onClose={handleChoosePolicyClose}
         onSubmit={handleChoosePolicy}
+        onVeto={handleVeto}
         gameUsers={gameUsers}
         gamePolicies={drawPolicies}
-        title="Select a policy"
+        enactedPolicies={enactedPolicies}
+        policyPeek={policyPeek}
+        declinedVeto={declinedVeto}
+        title={modalTitle}
       />
       <TableTopComponent
         gameUsers={gameUsers}

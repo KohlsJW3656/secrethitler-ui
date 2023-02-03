@@ -4,15 +4,10 @@ import { Container } from "react-bootstrap";
 import GameUserImageComponent from "./GameUserImageComponent";
 import "../styles/modal.css";
 
-function ChooseChancellorModal(props) {
+function ChoosePlayerModal(props) {
   const [open, setOpen] = useState(props.open);
   const currentUser = props.currentUser;
-  const eligibleUsers = props.gameUsers.filter(
-    (gameUser) =>
-      gameUser.role_id !== currentUser.role_id &&
-      gameUser.prev_president === 0 &&
-      gameUser.prev_chancellor === 0
-  );
+  const eligibleUsers = props.eligibleUsers;
   const playerCount = props.playerCount;
 
   useEffect(() => {
@@ -43,11 +38,11 @@ function ChooseChancellorModal(props) {
         <Container className="center">
           {eligibleUsers.map((gameUser) => (
             <GameUserImageComponent
+              showButtons
               gameUser={gameUser}
               currentUser={currentUser}
               playerCount={playerCount}
               select={handleSubmit}
-              chooseChancellor={true}
             ></GameUserImageComponent>
           ))}
         </Container>
@@ -56,4 +51,4 @@ function ChooseChancellorModal(props) {
   );
 }
 
-export default ChooseChancellorModal;
+export default ChoosePlayerModal;

@@ -102,6 +102,7 @@ function OfficialsComponent() {
             setDiscarded={setDiscarded}
             setEnacted={setEnacted}
             drawPolicies={drawPolicies}
+            showButtons
           />
         ))}
       </Container>
