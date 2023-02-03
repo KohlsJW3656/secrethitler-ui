@@ -73,7 +73,7 @@ export function startCreatingGame(
       .then((response) => response.json())
       .then((data) => {
         if (data.ok) {
-          game.game_id = data.id;
+          game.id = data.id;
           dispatch(FinishCreatingGame(game));
           dispatch(
             AddNotification({
