@@ -32,7 +32,7 @@ function LobbyComponent(props) {
 
   const userColumns = [
     {
-      dataField: "game_user_id",
+      dataField: "id",
       formatter: (cell, row) =>
         gameUsers[0].game_user_id === cell ? (
           <FontAwesomeIcon icon={faCrown} className="icon" />

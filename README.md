@@ -25,4 +25,5 @@ When there are 5 fascist policies enacted, veto powers are unlocked. If the chan
 
 When a team has won, players can either leave the lobby or play again with the same group.
 
-URL: https://secrethitleronline.duckdns.org
+Prod: https://secrethitleronline.duckdns.org
+Dev: https://dev.secrethitleronline.duckdns.org
