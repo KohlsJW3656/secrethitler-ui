@@ -25,7 +25,7 @@ function LobbyComponent(props) {
   const [displayErrorOpen, setDisplayErrorOpen] = useState(false);
   const [kickUserOpen, setKickUserOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState({
-    id: -1,
+    game_user_id: -1,
     username: "No user selected",
   });
   const [kickUserMessage, setKickUserMessage] = useState("");
@@ -34,7 +34,7 @@ function LobbyComponent(props) {
     {
       dataField: "id",
       formatter: (cell, row) =>
-        gameUsers[0].id === cell ? (
+        gameUsers[0].game_user_id === cell ? (
           <FontAwesomeIcon icon={faCrown} className="icon" />
         ) : (
           <></>
@@ -85,7 +85,7 @@ function LobbyComponent(props) {
   };
 
   const handleKickUserClick = () => {
-    if (selectedUser.id !== -1) {
+    if (selectedUser.game_user_id !== -1) {
       setKickUserMessage(
         "Are you sure you want to kick " + selectedUser.username + "?"
       );
@@ -102,19 +102,19 @@ function LobbyComponent(props) {
 
   const handleKickUser = () => {
     socket.emit("kick-user", {
-      gameUserId: selectedUser.id,
-      gameId: game.id,
+      gameUserId: selectedUser.game_user_id,
+      gameId: game.game_id,
       userId: selectedUser.user_id,
       username: selectedUser.username,
     });
-    setSelectedUser({ id: -1, username: "No user selected" });
+    setSelectedUser({ game_user_id: -1, username: "No user selected" });
     setKickUserOpen(false);
   };
 
   const handleReadyUp = () => {
     socket.emit("user-ready", {
-      gameUserId: gameUser.id,
-      gameId: game.id,
+      gameUserId: gameUser.game_user_id,
+      gameId: game.game_id,
       username: gameUser.username,
       ready: !gameUser.ready,
     });
