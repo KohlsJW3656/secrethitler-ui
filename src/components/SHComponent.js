@@ -35,13 +35,12 @@ function SHComponent(props) {
     socket.on("choose-chancellor", () => {
       setModalTitle("Choose a Chancellor");
 
-      // The previous president can be chancellor when 4 or less players are in
-      if (gameUsers.length > 4) {
+      // The previous president can be chancellor when 5 or less players are in
+      if (gameUsers.length <= 5) {
         setEligibleUsers(
           gameUsers.filter(
             (eligibleUser) =>
               eligibleUser.role_id !== gameUser.role_id &&
-              eligibleUser.prev_president === 0 &&
               eligibleUser.prev_chancellor === 0
           )
         );
@@ -50,6 +49,7 @@ function SHComponent(props) {
           gameUsers.filter(
             (eligibleUser) =>
               eligibleUser.role_id !== gameUser.role_id &&
+              eligibleUser.prev_president === 0 &&
               eligibleUser.prev_chancellor === 0
           )
         );
