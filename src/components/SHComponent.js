@@ -8,6 +8,7 @@ import ConfirmModal from "./ConfirmModal";
 import ChoosePlayerModal from "./ChoosePlayerModal";
 import CastBallotModal from "./CastBallotModal";
 import ChoosePolicyModal from "./ChoosePolicyModal";
+import InvestigationModal from "./InvestigationModal";
 
 function SHComponent(props) {
   const dispatch = useDispatch();
@@ -25,7 +26,10 @@ function SHComponent(props) {
   const [castBallotOpen, setCastBallotOpen] = useState(false);
   const [choosePolicyOpen, setChoosePolicyOpen] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [investigationModalOpen, setInvestigationModalOpen] = useState(false);
+  const [selectedGameUserId, setSelectedGameUserId] = useState(0);
   const [policyPeek, setPolicyPeek] = useState(false);
+  const [investigation, setInvestigation] = useState(false);
   const [execution, setExecution] = useState(false);
   const [declinedVeto, setDeclinedVeto] = useState(false);
 
@@ -100,9 +104,16 @@ function SHComponent(props) {
     });
     /* Investigate Loyalty */
     socket.on("investigate-loyalty", (data) => {
-      handleDisplayErrorClose();
-      setModalMessage(data.presidentialPower.description);
-      setDisplayErrorOpen(true);
+      setInvestigation(true);
+      setModalTitle(data.presidentialPower.description);
+      setEligibleUsers(
+        gameUsers.filter(
+          (eligibleUser) =>
+            eligibleUser.role_id !== gameUser.role_id &&
+            eligibleUser.investigated === 0
+        )
+      );
+      setChoosePlayerOpen(true);
     });
     /* Call Special Election */
     socket.on("call-special-election", (data) => {
@@ -189,21 +200,39 @@ function SHComponent(props) {
     }
   };
 
+  const handleInvestigation = () => {
+    setInvestigationModalOpen(false);
+    socket.emit("presidential-power", {
+      gameId: game.game_id,
+      game_user_id: selectedGameUserId,
+      value: 1,
+      investigation,
+    });
+    setSelectedGameUserId(0);
+    setInvestigation(false);
+    setModalTitle("");
+  };
+
   const handleChoosePlayer = (game_user_id) => {
-    setModalTitle(false);
-    setEligibleUsers([]);
     setChoosePlayerOpen(false);
+    if (investigation) {
+      setSelectedGameUserId(game_user_id);
+      setInvestigationModalOpen(true);
+      return;
+    }
+    setModalTitle("");
+    setEligibleUsers([]);
     if (execution) {
-      setExecution(false);
       socket.emit("presidential-power", {
         gameId: game.game_id,
-        game_user_id: game_user_id,
+        game_user_id,
         value: 1,
-        execution: true,
+        execution,
         role_id: gameUsers.filter(
-          (executedUser) => executedUser.game_user_id === game_user_id
+          (selectedUser) => selectedUser.game_user_id === game_user_id
         )[0].role_id,
       });
+      setExecution(false);
     } else {
       socket.emit("assign-chancellor", {
         gameId: game.game_id,
@@ -284,6 +313,13 @@ function SHComponent(props) {
         eligibleUsers={eligibleUsers}
         currentUser={gameUser}
         playerCount={gameUsers.length}
+        title={modalTitle}
+      />
+      <InvestigationModal
+        open={investigationModalOpen}
+        onClose={handleInvestigation}
+        gameUsers={gameUsers}
+        selectedGameUserId={selectedGameUserId}
         title={modalTitle}
       />
       <CastBallotModal

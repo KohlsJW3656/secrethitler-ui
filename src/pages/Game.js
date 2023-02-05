@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import SideBar from "../components/SideBar";
 import SHComponent from "../components/SHComponent";
 
 import { useSelector } from "react-redux";
@@ -18,7 +17,6 @@ function Game({ history }) {
 
   return (
     <>
-      <SideBar history={history} active="game" />
       <Container>
         <SHComponent history={history} />
         <FooterComponent />
