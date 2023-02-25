@@ -30,6 +30,7 @@ function SHComponent(props) {
   const [selectedGameUserId, setSelectedGameUserId] = useState(0);
   const [policyPeek, setPolicyPeek] = useState(false);
   const [investigation, setInvestigation] = useState(false);
+  const [specialElection, setSpecialElection] = useState(false);
   const [execution, setExecution] = useState(false);
   const [declinedVeto, setDeclinedVeto] = useState(false);
 
@@ -45,7 +46,8 @@ function SHComponent(props) {
           gameUsers.filter(
             (eligibleUser) =>
               eligibleUser.role_id !== gameUser.role_id &&
-              eligibleUser.prev_chancellor === 0
+              eligibleUser.prev_chancellor === 0 &&
+              eligibleUser.assassinated === 0
           )
         );
       } else {
@@ -54,7 +56,8 @@ function SHComponent(props) {
             (eligibleUser) =>
               eligibleUser.role_id !== gameUser.role_id &&
               eligibleUser.prev_president === 0 &&
-              eligibleUser.prev_chancellor === 0
+              eligibleUser.prev_chancellor === 0 &&
+              eligibleUser.assassinated === 0
           )
         );
       }
@@ -117,9 +120,14 @@ function SHComponent(props) {
     });
     /* Call Special Election */
     socket.on("call-special-election", (data) => {
-      handleDisplayErrorClose();
-      setModalMessage(data.presidentialPower.description);
-      setDisplayErrorOpen(true);
+      setSpecialElection(true);
+      setModalTitle(data.presidentialPower.description);
+      setEligibleUsers(
+        gameUsers.filter(
+          (eligibleUser) => eligibleUser.role_id !== gameUser.role_id
+        )
+      );
+      setChoosePlayerOpen(true);
     });
     /* Policy Peek */
     socket.on("policy-peek", (data) => {
@@ -133,7 +141,9 @@ function SHComponent(props) {
       setModalTitle(data.presidentialPower.description);
       setEligibleUsers(
         gameUsers.filter(
-          (eligibleUser) => eligibleUser.role_id !== gameUser.role_id
+          (eligibleUser) =>
+            eligibleUser.role_id !== gameUser.role_id &&
+            eligibleUser.assassinated === 0
         )
       );
       setChoosePlayerOpen(true);
@@ -144,7 +154,9 @@ function SHComponent(props) {
       setModalTitle(data.presidentialPower.description);
       setEligibleUsers(
         gameUsers.filter(
-          (eligibleUser) => eligibleUser.role_id !== gameUser.role_id
+          (eligibleUser) =>
+            eligibleUser.role_id !== gameUser.role_id &&
+            eligibleUser.assassinated === 0
         )
       );
       setChoosePlayerOpen(true);
@@ -215,23 +227,27 @@ function SHComponent(props) {
 
   const handleChoosePlayer = (game_user_id) => {
     setChoosePlayerOpen(false);
+
     if (investigation) {
       setSelectedGameUserId(game_user_id);
       setInvestigationModalOpen(true);
       return;
     }
+
     setModalTitle("");
     setEligibleUsers([]);
-    if (execution) {
+    if (execution || specialElection) {
       socket.emit("presidential-power", {
         gameId: game.game_id,
         game_user_id,
         value: 1,
+        specialElection,
         execution,
         role_id: gameUsers.filter(
           (selectedUser) => selectedUser.game_user_id === game_user_id
         )[0].role_id,
       });
+      setSpecialElection(false);
       setExecution(false);
     } else {
       socket.emit("assign-chancellor", {
