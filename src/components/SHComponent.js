@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { Container } from "react-bootstrap";
 
 import TableTopComponent from "./TableTopComponent";
 import ErrorModal from "./ErrorModal";
@@ -19,8 +20,9 @@ function SHComponent(props) {
   const drawPolicies = useSelector((state) => state.drawPolicies);
   const enactedPolicies = useSelector((state) => state.enactedPolicies);
   const [eligibleUsers, setEligibleUsers] = useState([]);
-  const [modalMessage, setModalMessage] = useState("");
   const [modalTitle, setModalTitle] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
+  const [statusText, setStatusText] = useState("");
   const [displayErrorOpen, setDisplayErrorOpen] = useState(false);
   const [choosePlayerOpen, setChoosePlayerOpen] = useState(false);
   const [castBallotOpen, setCastBallotOpen] = useState(false);
@@ -71,18 +73,16 @@ function SHComponent(props) {
     /* The ballot failed */
     socket.on("ballot-failed", (data) => {
       handleDisplayErrorClose();
-      setModalMessage(
+      setStatusText(
         "The ballot failed " + data.jas + " to " + data.neins + "!"
       );
-      setDisplayErrorOpen(true);
     });
     /* The ballot passed */
     socket.on("ballot-passed", (data) => {
       handleDisplayErrorClose();
-      setModalMessage(
+      setStatusText(
         "The ballot passed " + data.jas + " to " + data.neins + "!"
       );
-      setDisplayErrorOpen(true);
     });
     /* President chooses a policy to discard */
     socket.on("president-policies", () => {
@@ -165,6 +165,7 @@ function SHComponent(props) {
     socket.on("game-win", (data) => {
       handleDisplayErrorClose();
       setModalMessage(data.message);
+      setStatusText(data.message);
       setDisplayErrorOpen(true);
     });
   }, [
@@ -266,10 +267,9 @@ function SHComponent(props) {
       username: gameUser.username,
       ballot: ballot,
     });
-    setModalMessage(
+    setStatusText(
       "Other players are still casting their ballots, please wait for them to finish."
     );
-    setDisplayErrorOpen(true);
   };
 
   const handleVeto = () => {
@@ -359,6 +359,9 @@ function SHComponent(props) {
         declinedVeto={declinedVeto}
         title={modalTitle}
       />
+      <Container className="center">
+        <h2>{statusText}</h2>
+      </Container>
       <TableTopComponent
         gameUsers={gameUsers}
         currentUser={gameUser}

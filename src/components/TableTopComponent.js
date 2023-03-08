@@ -12,6 +12,7 @@ function TableTopComponent(props) {
   const deckPolicies = useSelector((state) => state.deckPolicies);
   const discardedPolicies = useSelector((state) => state.discardedPolicies);
   const enactedPolicies = useSelector((state) => state.enactedPolicies);
+  const electionTracker = useSelector((state) => state.electionTracker);
 
   return (
     <>
@@ -52,6 +53,7 @@ function TableTopComponent(props) {
             enactedPolicies.filter((card) => card.fascist === 0).length
           }
           playerCount={gameUsers.length}
+          electionTracker={electionTracker}
         />
       </Container>
     </>

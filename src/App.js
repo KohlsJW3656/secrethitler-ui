@@ -14,6 +14,7 @@ import {
   setGameUsers,
   setGamePolicies,
   startLoggingOutUser,
+  setElectionTracker,
 } from "./actions";
 
 import Home from "./pages/Home";
@@ -47,6 +48,9 @@ function App() {
     );
     socket.on("get-game-users", (data) => dispatch(setGameUsers(data)));
     socket.on("get-game-policies", (data) => dispatch(setGamePolicies(data)));
+    socket.on("get-election-tracker", (data) =>
+      dispatch(setElectionTracker(data))
+    );
     socket.on("logout", (message) =>
       dispatch(startLoggingOutUser(socket, history, message))
     );

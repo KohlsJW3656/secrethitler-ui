@@ -4,9 +4,15 @@ export function Board(props) {
   const type = props.type;
   const playerCount = props.playerCount;
   const enactedCount = props.enactedCount;
+  const electionTracker = props.electionTracker;
   let path = "";
   if (type === "Liberal") {
-    path = "images/boards/liberal/liberal" + enactedCount + ".png";
+    path =
+      "images/boards/liberal/liberal" +
+      enactedCount +
+      "-" +
+      electionTracker +
+      ".png";
   } else {
     if (playerCount <= 6) {
       path = "images/boards/fascist5-6/fascist" + enactedCount + ".png";

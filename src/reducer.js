@@ -18,6 +18,7 @@ const initialState = {
   deckPolicies: [],
   discardedPolicies: [],
   enactedPolicies: [],
+  electionTracker: 0,
   gameHost: false,
   fascist: false,
   hitler: false,
@@ -129,6 +130,11 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         playerCount: action.payload,
+      };
+    case Action.SetElectionTracker:
+      return {
+        ...state,
+        electionTracker: action.payload,
       };
     case Action.SetGameUsers:
       return {

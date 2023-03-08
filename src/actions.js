@@ -34,6 +34,7 @@ export const Action = Object.freeze({
   /* Sockets */
   SetSocket: "SetSocket",
   SetPlayerCount: "SetPlayerCount",
+  SetElectionTracker: "SetElectionTracker",
   SetGameUsers: "SetGameUsers",
   SetGamePolicies: "SetGamePolicies",
 });
@@ -602,6 +603,13 @@ export function setPlayerCount(playerCount) {
   return {
     type: Action.SetPlayerCount,
     payload: playerCount,
+  };
+}
+
+export function setElectionTracker(data) {
+  return {
+    type: Action.SetElectionTracker,
+    payload: data.electionTracker,
   };
 }
 
