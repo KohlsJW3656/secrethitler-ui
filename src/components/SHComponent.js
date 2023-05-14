@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Container } from "react-bootstrap";
-
+import { Link } from "react-router-dom";
 import TableTopComponent from "./TableTopComponent";
 import ErrorModal from "./ErrorModal";
 import ConfirmModal from "./ConfirmModal";
@@ -35,6 +35,7 @@ function SHComponent(props) {
   const [specialElection, setSpecialElection] = useState(false);
   const [execution, setExecution] = useState(false);
   const [declinedVeto, setDeclinedVeto] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     if (socket == null) return;
@@ -167,6 +168,7 @@ function SHComponent(props) {
       setModalMessage(data.message);
       setStatusText(data.message);
       setDisplayErrorOpen(true);
+      setGameOver(true);
     });
   }, [
     socket,
@@ -308,6 +310,16 @@ function SHComponent(props) {
   return (
     <>
       <h1 className="pageTitle">Secret Hitler</h1>
+      <Container className="center">
+        <h2>{statusText}</h2>
+      </Container>
+      <Container className="center">
+        {gameOver && (
+          <h2>
+            <Link to="/game">Back to game selection</Link>
+          </h2>
+        )}
+      </Container>
       <ErrorModal
         open={displayErrorOpen}
         onClose={handleDisplayErrorClose}
@@ -359,9 +371,6 @@ function SHComponent(props) {
         declinedVeto={declinedVeto}
         title={modalTitle}
       />
-      <Container className="center">
-        <h2>{statusText}</h2>
-      </Container>
       <TableTopComponent
         gameUsers={gameUsers}
         currentUser={gameUser}
